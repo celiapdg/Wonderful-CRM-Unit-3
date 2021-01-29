@@ -59,7 +59,7 @@ public class CrmUnit3Application implements CommandLineRunner {
 					.trim();
 
 			//Go to utils Command to the this method functionality
-			commandReader(userInput, leadList, opportunityList, repList);
+			commandReader(userInput);
 		}
 
 

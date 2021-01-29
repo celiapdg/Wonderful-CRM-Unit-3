@@ -39,7 +39,6 @@ public class Account {
         this.industry = industry;
         this.contactList.add(contact);
         this.opportunityList.add(opportunity);
-
     }
 
     public int getEmployeeCount() {

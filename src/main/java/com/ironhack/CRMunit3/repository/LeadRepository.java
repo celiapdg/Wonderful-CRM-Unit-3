@@ -6,4 +6,5 @@ import org.springframework.stereotype.*;
 
 @Repository
 public interface LeadRepository extends JpaRepository<Lead, Integer> {
+    public Lead findByLeadId(int id);
 }

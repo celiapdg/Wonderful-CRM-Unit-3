@@ -2,11 +2,12 @@ package com.ironhack.CRMunit3.utils;
 
 import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
+import com.ironhack.CRMunit3.repository.*;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.*;
 
 import static com.ironhack.CRMunit3.utils.ScanInfo.*;
 
@@ -15,11 +16,14 @@ public class Command {
     public static Sound errorSound = new Sound("error.wav");
     public static Sound bipSound = new Sound("bip.wav");
     public static Sound exitSound = new Sound("exit.wav");
+    public static SalesRepRepository salesRepRepository;
+    public static LeadRepository leadRepository;
+    public static ContactRepository contactRepository;
+    public static OpportunityRepository opportunityRepository;
+    public static AccountRepository accountRepository;
 
     //method called in main
-    public static void commandReader(String userInput,
-                                     HashMap<Integer, Lead> leadList,
-                                     HashMap<Integer, Opportunity> opportunityList, HashMap<Integer, SalesRep> repList) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+    public static void commandReader(String userInput) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
 
         //separate the words in the input
         String[] arr = userInput.split(" ");
@@ -32,7 +36,7 @@ public class Command {
                     switch (arr[1]){
                         case "sales":
                             String salesRepName = askName();
-                            newSalesRep(salesRepName,repList);
+                            newSalesRep(salesRepName);
                             break;
                         case "lead":
                                 //go to utils ScanInfo to check how these work
@@ -40,9 +44,10 @@ public class Command {
                                 String phone = askPhone();
                                 String email = askEmail();
                                 String company = askCompName();
+                                SalesRep salesRep = askSalesRep();
 
                                 //this method is defined below
-                                newLead(name, phone, email, company, leadList);
+                                newLead(name, phone, email, company, salesRep);
                                 bipSound.playSound();
                             break;
                     }
@@ -52,14 +57,14 @@ public class Command {
                     int id = Integer.parseInt(arr[1]);
 
                     //This method is defined below
-                    Contact contact = createContact(leadList.get(id));
+                    Contact contact = createContact(leadRepository.findByLeadId(id));
 
                     //go to utils ScanInfo to check how these work
                     Product product = askProduct();
                     int quantity = askQuantity();
 
                     //method implementation below
-                    Opportunity opportunity = createOpportunity(product, quantity, contact, opportunityList);
+                    Opportunity opportunity = createOpportunity(product, quantity, contact);
 
                     //go to utils ScanInfo to check how these work
                     Industry industry = askIndustry();
@@ -69,7 +74,7 @@ public class Command {
 
                     //the next two methods are also below
                     Account account = createAccount(industry, numOfEmployees, city, country, contact, opportunity);
-                    removeLead(id, leadList);
+                    removeLead(leadRepository.findByLeadId(id));
                     System.out.println((char)27 + "[32mNew opportunity created!!\n"+opportunity);
                     bipSound.playSound();
                     break;
@@ -78,11 +83,11 @@ public class Command {
                         //if the second word is leads enters here
                         case "leads":
                             //method below
-                            showLeads(leadList);
+                            showLeads();
                             break;
                         case "opportunities":
                             //if the second word is opportunities enters here
-                            showOpportunities(opportunityList);
+                            showOpportunities();
                             break;
 
                         default:
@@ -96,13 +101,13 @@ public class Command {
                         //if the second word is lead enters here
                         case "lead":
                             //method below
-                            lookupLead(arr[2], leadList);
+                            lookupLead(arr[2]);
                             break;
 
                         //if the second word is opportunity enters here
                         case "opportunity":
                             //method below
-                            lookupOpportunity(arr[2], opportunityList);
+                            lookupOpportunity(arr[2]);
                             break;
                         default:
                             // AGAIN default to make sure every option is managed
@@ -113,13 +118,13 @@ public class Command {
 
                 case "close-lost":
                     //method below
-                    closeLost(arr[1], opportunityList);
+                    closeLost(arr[1]);
                     bipSound.playSound();
                     break;
 
                 case "close-won":
                     //method below
-                    closeWon(arr[1], opportunityList);
+                    closeWon(arr[1]);
                     bipSound.playSound();
                     break;
 
@@ -148,54 +153,45 @@ public class Command {
             }
     }
 
-    public static void newSalesRep (String name, HashMap < Integer,SalesRep > repList){
+    public static void newSalesRep (String name){
 
         SalesRep salesRep=new SalesRep(name);
 
-        repList.put(salesRep.getSalesRepId(), salesRep);
+        salesRepRepository.save(salesRep);
         System.out.println((char)27 + "[32mNew Sales Rep created!!\n"+salesRep);
     }
 
     //Receives the user input and creates Lead with automatic ID,
     // it also receives the Opportunities list to store the new one
-    public static void newLead (String name,
+    public static Lead newLead (String name,
                                 String phone,
                                 String email,
                                 String compName,
-                                HashMap < Integer,
-                                Lead > leadList){
-
-        SalesRep salesRep=new SalesRep("Julia Campos");
+                                SalesRep salesRep){
 
         Lead lead = new Lead(name, phone, email, compName, salesRep);
-        leadList.put(lead.getLeadId(), lead);
         System.out.println((char)27 + "[32mNew lead created!!\n"+lead);
+        return leadRepository.save(lead);
+
     }
 
     //Receives the lead info and creates Contact
     public static Contact createContact(Lead lead){
-
-        Account accountId = new Account();
-
         String name = lead.getName();
         String phoneNumber = lead.getPhoneNumber();
         String email = lead.getEmail();
         String companyName = lead.getCompanyName();
-        return new Contact(name, phoneNumber, email, companyName, accountId);
+        return contactRepository.save(new Contact(name, phoneNumber, email, companyName));
     }
 
     //Receives the user input, product and Contact and creates Opportunity with automatic ID,
     // it also receives the Opportunities list to store the new one
     public static Opportunity createOpportunity(Product product,
                                                 int quantity,
-                                                Contact decisionMaker,
-                                                HashMap<Integer, Opportunity> opportunityList){
+                                                Contact decisionMaker){
         SalesRep salesRep=new SalesRep("Julia Campos");
-        Account accountId = new Account();
-
-        Opportunity opportunity = new Opportunity(product, quantity, decisionMaker, salesRep, accountId);
-        opportunityList.put(opportunity.getOpportunityId(), opportunity);
-        return opportunity;
+        Opportunity opportunity = new Opportunity(product, quantity, decisionMaker, salesRep);
+        return opportunityRepository.save(opportunity);
     }
 
     //Receives the user input, industry and Opportunity and creates Account
@@ -210,20 +206,20 @@ public class Command {
     }
 
     //Receives id of the Lead and the Lead list and erases
-    public static void removeLead(int id,
-                                  HashMap<Integer, Lead> leadList){
-        leadList.remove(id);
+    public static void removeLead(Lead lead){
+        leadRepository.delete(lead);
     }
 
 
-    public static void showLeads (HashMap < Integer, Lead > leadList){
+    public static void showLeads (){
 
+        List<Lead> leadList = leadRepository.findAll();
 //        If there are no leads left
         if (leadList.isEmpty()){
 //            Out prints a message
             System.out.println((char)27 + "[31mYou don't have leads in this moment");
         }else {
-            for (Lead lead : leadList.values()) {
+            for (Lead lead : leadList) {
                 System.out.println(lead);
                 System.out.println("");
             }
@@ -231,14 +227,15 @@ public class Command {
     }
 
 
-    public static void showOpportunities (HashMap < Integer, Opportunity > opportunityList){
+    public static void showOpportunities (){
 
+        List<Opportunity> opportunityList = opportunityRepository.findAll();
         //If there are no opportunities yet
         if (opportunityList.isEmpty()){
 //            Out prints a message
             System.out.println((char)27 + "[31mYou haven't created any opportunity yet");
         }else {
-            for (Opportunity opportunity : opportunityList.values()) {
+            for (Opportunity opportunity : opportunityList) {
                 System.out.println(opportunity);
                 System.out.println("");
             }
@@ -246,8 +243,7 @@ public class Command {
     }
 
     // Takes the lead id and the lead List and shows its info
-    public static void lookupLead (String id,
-                                   HashMap < Integer, Lead > leadList){
+    public static void lookupLead (String id){
         //checking for invalid id
         Integer leadId = Integer.parseInt(id);
         if (leadId < 0){
@@ -255,7 +251,7 @@ public class Command {
         }
 
 
-        Lead lead = leadList.get(leadId);
+        Lead lead = leadRepository.findByLeadId(leadId);
         //checking for null lead
         if (lead == null){
             throw new NullPointerException();
@@ -264,14 +260,13 @@ public class Command {
     }
 
     // Takes the lead id and the opportunity List and shows its info
-    public static void lookupOpportunity (String id,
-                                          HashMap < Integer, Opportunity > opportunityList){
+    public static void lookupOpportunity (String id){
         //checking for invalid id
         Integer opportunityId = Integer.parseInt(id);
         if (opportunityId < 0){
             throw new NumberFormatException();
         }
-        Opportunity opportunity = opportunityList.get(opportunityId);
+        Opportunity opportunity = opportunityRepository.findByOpportunityId(opportunityId);
 
         //checking for null opportunity
         if (opportunity == null){
@@ -281,15 +276,14 @@ public class Command {
     }
 
     //Change opportunity status, receives opportunity id and List
-    public static void closeLost (String id,
-                                  HashMap < Integer, Opportunity > opportunityList){
+    public static void closeLost (String id){
         //checking for invalid id
         Integer opportunityId = Integer.parseInt(id);
         if (opportunityId < 0){
             throw new NumberFormatException();
         }
 
-        Opportunity opportunity = opportunityList.get(opportunityId);
+        Opportunity opportunity = opportunityRepository.findByOpportunityId(opportunityId);
 
         //checking for null opportunity
         if (opportunity == null){
@@ -301,6 +295,7 @@ public class Command {
             opportunity.setStatus(Status.CLOSED_LOST);
             opportunity.toString();
             System.out.println((char)27 + "[32mOpportunity closed-lost");
+            opportunityRepository.save(opportunity);
         } else {
             System.out.println((char)27 + "[39mOpportunity was already closed-lost");
         }
@@ -308,8 +303,7 @@ public class Command {
     }
 
     //Change opportunity status, receives opportunity id and List
-    public static void closeWon (String id,
-                                 HashMap < Integer, Opportunity > opportunityList){
+    public static void closeWon (String id){
 
         //checking for invalid id
         Integer opportunityId = Integer.parseInt(id);
@@ -317,7 +311,7 @@ public class Command {
             throw new NumberFormatException();
         }
 
-        Opportunity opportunity = opportunityList.get(opportunityId);
+        Opportunity opportunity = opportunityRepository.findByOpportunityId(opportunityId);
 
         //checking for null opportunity
         if (opportunity == null){
@@ -329,6 +323,7 @@ public class Command {
             opportunity.setStatus(Status.CLOSED_WON);
             opportunity.toString();
             System.out.println((char)27 + "[32mOpportunity closed-won");
+            opportunityRepository.save(opportunity);
         } else {
             System.out.println((char)27 + "[39mOpportunity was already closed-won");
         }

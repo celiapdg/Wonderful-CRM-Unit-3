@@ -1,6 +1,7 @@
 package com.ironhack.CRMunit3.utils;
 
 import com.ironhack.CRMunit3.enums.*;
+import com.ironhack.CRMunit3.model.*;
 
 
 import java.util.Scanner;
@@ -101,6 +102,23 @@ public class ScanInfo {
             }
         }
         return compName;
+    }
+
+    public static SalesRep askSalesRep(){
+        boolean validSalesRepId = false;
+        String salesRepId = "";
+        SalesRep salesRep = null;
+
+        while (!validSalesRepId){
+            System.out.println((char)27 + "[39mPlease, provide a Company name");
+            salesRepId = scanner.nextLine().trim();
+            try {
+                validSalesRepId = checkSalesRepId(salesRepId);
+            }catch (Exception e){
+//                TODO poner excepciones
+            }
+        }
+        return salesRep;
     }
 
 

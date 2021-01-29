@@ -22,6 +22,14 @@ public class Checker {
         return true;
     }
 
+    public static boolean checkSalesRepId(String idRep){
+        int id = Integer.parseInt(idRep);
+
+//        TODO comprobamos si el id está en la base de datos
+
+        return true;
+    }
+
 
     public static boolean checkPhone(String phoneNum){
 
