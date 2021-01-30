@@ -99,7 +99,7 @@ public class Checker {
         return true;
     }
 
-    public static int checkAccountId(Integer id){
+    public static int checkValidId(Integer id){
 
         if (id <= 0) {
             throw new IllegalArgumentException((char)27 + "[31mQuantity must be above 0");

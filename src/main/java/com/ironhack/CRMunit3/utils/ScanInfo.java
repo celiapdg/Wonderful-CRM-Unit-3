@@ -225,7 +225,7 @@ public class ScanInfo {
         while(!validResponse){
             System.out.println((char)27 + "[39m Choose an Account id");
             answer= scanner.nextLine().trim().toLowerCase();
-            id=checkAccountId(Integer.parseInt(answer));
+            id=checkValidId(Integer.parseInt(answer));
             validResponse=true;
         }
         return id;

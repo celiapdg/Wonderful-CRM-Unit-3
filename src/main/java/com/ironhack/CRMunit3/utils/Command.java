@@ -89,11 +89,15 @@ public class Command {
                             if (accountRepository.findAll().isEmpty()){
                                 System.out.println((char)27 + "[31mThere is no account created yet, you must create one");
                             }else {
-                                System.out.println((char)27 + "[39mSelect an account id");
                                 Integer accountId=askAccountId();
-                                accountRepository.findById(accountId);
-
-                            //TODO comprobar id de la cuenta
+                                Account account=accountRepository.findByAccountId(accountId);
+                                account.getOpportunityList().add(opportunity);
+                                account.getContactList().add(contact);
+                                accountRepository.save(account);
+                                opportunity.setAccountId(account);
+                                opportunityRepository.save(opportunity);
+                                contact.setAccountId(account);
+                                contactRepository.save(contact);
                             break;
                             }
                         case"y":
@@ -243,8 +247,9 @@ public class Command {
                                         String country,
                                         Contact contact,
                                         Opportunity opportunity){
-
-        return new Account(industry, numOfEmployees, city, country, contact,opportunity);
+        Account account=accountRepository.save(new Account(industry, numOfEmployees, city, country, contact,opportunity)) ;
+        System.out.println((char)27 + "[32mAccount created!!\n");
+        return account;
     }
 
     //Receives id of the Lead and the Lead list and erases
