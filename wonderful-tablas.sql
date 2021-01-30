@@ -1,4 +1,4 @@
-DROP SCHEMA wonderful_crm;
+DROP SCHEMA IF EXISTS wonderful_crm;
 CREATE SCHEMA wonderful_crm;
 USE wonderful_crm;
 

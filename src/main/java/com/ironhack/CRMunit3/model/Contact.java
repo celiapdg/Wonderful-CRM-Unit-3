@@ -8,14 +8,14 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int contactId;
-    private String contactName;
+    private String name;
     private String phoneNumber;
     private String email;
     private String companyName;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    private Account accountId;
+    private Account account;
 
     public Contact() {
     }
@@ -24,14 +24,14 @@ public class Contact {
                    String phoneNumber,
                    String email,
                    String companyName) {
-        this.contactName = name;
+        this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.companyName = companyName;
     }
 
     public String getName() {
-        return contactName;
+        return name;
     }
 
     public String getPhoneNumber() {
@@ -50,18 +50,18 @@ public class Contact {
         return contactId;
     }
 
-    public Account getAccountId() {
-        return accountId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAccountId(Account accountId) {
-        this.accountId = accountId;
+    public void setAccountId(Account account) {
+        this.account = account;
     }
 
     @Override
     public String toString() {
         return "Contact: " +
-                "\n  name = " + contactName +
+                "\n  name = " + name +
                 ", \n  phoneNumber = " + phoneNumber +
                 ", \n  email = " + email  +
                 ", \n  companyName = " + companyName;
@@ -72,7 +72,7 @@ public class Contact {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contact contact = (Contact) o;
-        return Objects.equals(contactName, contact.contactName) &&
+        return Objects.equals(name, contact.name) &&
                Objects.equals(phoneNumber, contact.phoneNumber) &&
                Objects.equals(email, contact.email) &&
                Objects.equals(companyName, contact.companyName);

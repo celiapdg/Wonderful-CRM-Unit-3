@@ -82,6 +82,8 @@ public class Command {
                     //method implementation below
                     Opportunity opportunity = createOpportunity(product, quantity, contact, lead.getSalesRep());
 
+                    Account account = new Account();
+
                     String answer=askNewAccount();
 
                     switch (answer){
@@ -90,14 +92,10 @@ public class Command {
                                 System.out.println((char)27 + "[31mThere is no account created yet, you must create one");
                             }else {
                                 Integer accountId=askAccountId();
-                                Account account=accountRepository.findByAccountId(accountId);
+                                account = accountRepository.findByAccountId(accountId);
                                 account.getOpportunityList().add(opportunity);
                                 account.getContactList().add(contact);
                                 accountRepository.save(account);
-                                opportunity.setAccountId(account);
-                                opportunityRepository.save(opportunity);
-                                contact.setAccountId(account);
-                                contactRepository.save(contact);
                             break;
                             }
                         case"y":
@@ -109,12 +107,14 @@ public class Command {
                             String country = askCountry();
 
                             //the next two methods are also below
-                            Account account = createAccount(industry, numOfEmployees, city, country, contact, opportunity);
+                            account = createAccount(industry, numOfEmployees, city, country, contact, opportunity);
                             break;
-
                     }
 
-
+                    opportunity.setAccount(account);
+                    opportunityRepository.save(opportunity);
+                    contact.setAccountId(account);
+                    contactRepository.save(contact);
 
                     removeLead(leadRepository.findByLeadId(id));
                     System.out.println((char)27 + "[32mNew opportunity created!!\n"+opportunity);
@@ -247,7 +247,7 @@ public class Command {
                                         String country,
                                         Contact contact,
                                         Opportunity opportunity){
-        Account account=accountRepository.save(new Account(industry, numOfEmployees, city, country, contact,opportunity)) ;
+        Account account = accountRepository.save(new Account(industry, numOfEmployees, city, country, contact,opportunity)) ;
         System.out.println((char)27 + "[32mAccount created!!\n");
         return account;
     }

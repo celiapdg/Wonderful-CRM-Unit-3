@@ -23,11 +23,11 @@ public class Account {
     private String city;
     private String country;
 
-    @OneToMany(fetch=FetchType.EAGER,mappedBy = "accountId")
+    @OneToMany(fetch=FetchType.EAGER, mappedBy = "account")
     @Fetch(FetchMode.SUBSELECT)
     private List<Contact> contactList = new ArrayList<>();
 
-    @OneToMany(fetch=FetchType.EAGER, mappedBy = "accountId")
+    @OneToMany(fetch=FetchType.EAGER, mappedBy = "account")
     @Fetch(FetchMode.SUBSELECT)
     private List<Opportunity> opportunityList = new ArrayList<>();
     //This allows us to generate ids that don't repeat

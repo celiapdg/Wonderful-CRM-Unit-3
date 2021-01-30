@@ -9,7 +9,7 @@ public class Lead {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer leadId;
-    private String leadName;
+    private String name;
     private String phoneNumber;
     private String email;
     private String companyName;
@@ -26,7 +26,7 @@ public class Lead {
                 String email,
                 String companyName, SalesRep salesRep) {
 
-        this.leadName = name;
+        this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.companyName = companyName;
@@ -42,11 +42,11 @@ public class Lead {
     }
 
     public String getName() {
-        return leadName;
+        return name;
     }
 
-    public void setName(String leadName) {
-        this.leadName = leadName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPhoneNumber() {
@@ -84,11 +84,11 @@ public class Lead {
     @Override
     public String toString() {
         return (char)27 + "[34mLead " + leadId +
-                "\nname = " + leadName +
-                ", \nphoneNumber = " + phoneNumber +
+                "\nname = " + name +
+                ", \nphone number = " + phoneNumber +
                 ", \nemail = " + email +
-                ", \ncompanyName = " + companyName+
-                ", \nsalesRep = " + salesRep.getName();
+                ", \ncompany name = " + companyName+
+                ", \nsales rep = " + salesRep.getName();
     }
 
     @Override
@@ -97,7 +97,7 @@ public class Lead {
         if (o == null || getClass() != o.getClass()) return false;
         Lead lead = (Lead) o;
         return phoneNumber == lead.phoneNumber &&
-               Objects.equals(leadName, lead.leadName) &&
+               Objects.equals(name, lead.name) &&
                Objects.equals(email, lead.email) &&
                Objects.equals(companyName, lead.companyName);
     }

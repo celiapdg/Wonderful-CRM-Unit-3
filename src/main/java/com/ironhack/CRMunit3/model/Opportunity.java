@@ -19,7 +19,7 @@ public class Opportunity {
     private Contact decisionMaker;
 
     @Enumerated(EnumType.STRING)
-    private Status opportunityStatus;
+    private Status status;
 
     @ManyToOne
     @JoinColumn(name = "sales_rep_id")
@@ -27,7 +27,7 @@ public class Opportunity {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    private Account accountId;
+    private Account account;
 
     public Opportunity() {
     }
@@ -38,19 +38,19 @@ public class Opportunity {
         this.product = product;
         this.decisionMaker = decisionMaker;
         this.salesRep = salesRep;
-        this.opportunityStatus = Status.OPEN;
+        this.status = Status.OPEN;
     }
 
     public Account getAccountId() {
-        return accountId;
+        return account;
     }
 
-    public void setAccountId(Account accountId) {
-        this.accountId = accountId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public void setStatus(Status status) {
-        this.opportunityStatus = status;
+        this.status = status;
     }
 
     public Product getProduct() {
@@ -62,7 +62,7 @@ public class Opportunity {
     }
 
     public Status getStatus() {
-        return opportunityStatus;
+        return status;
     }
 
     public int getOpportunityId() {
@@ -86,8 +86,8 @@ public class Opportunity {
         return (char)27 + "[34mOpportunity " + opportunityId+
                 "\nproduct = " + product +
                 "\namount = " + quantity +
-                ", \nstatus = " + opportunityStatus +
-                ", \nsalesRep = " + salesRep.getName() +
+                ", \nstatus = " + status +
+                ", \nsales rep = " + salesRep.getName() +
                 ", \n" + decisionMaker;
     }
 
@@ -99,6 +99,6 @@ public class Opportunity {
         return quantity == that.quantity &&
                product == that.product &&
                Objects.equals(decisionMaker, that.decisionMaker) &&
-                opportunityStatus == that.opportunityStatus;
+                status == that.status;
     }
 }
