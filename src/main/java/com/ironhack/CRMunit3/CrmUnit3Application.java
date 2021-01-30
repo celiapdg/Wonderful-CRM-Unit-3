@@ -2,8 +2,12 @@ package com.ironhack.CRMunit3;
 
 import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
+import com.ironhack.CRMunit3.repository.*;
+import com.ironhack.CRMunit3.utils.*;
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.*;
 
 import javax.sound.sampled.*;
 import java.io.*;
@@ -13,6 +17,16 @@ import static com.ironhack.CRMunit3.utils.Command.*;
 
 @SpringBootApplication
 public class CrmUnit3Application implements CommandLineRunner {
+	@Autowired
+	SalesRepRepository salesRepRepository;
+	@Autowired
+	OpportunityRepository opportunityRepository;
+	@Autowired
+	LeadRepository leadRepository;
+	@Autowired
+	ContactRepository contactRepository;
+	@Autowired
+	AccountRepository accountRepository;
 
 	public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
 		SpringApplication.run(CrmUnit3Application.class, args);
@@ -23,10 +37,6 @@ public class CrmUnit3Application implements CommandLineRunner {
 		//Create a Scanner to collect user input
 		Scanner myScanner = new Scanner(System.in);
 
-		//Create two lists to store both leads and opportunities
-		HashMap<Integer, Lead> leadList=new HashMap<>();
-		HashMap<Integer, Opportunity> opportunityList=new HashMap<>();
-		HashMap<Integer, SalesRep> repList=new HashMap<>();
 
 		//We create two Leads and opportunities for starters so you can easily test every command
 //		leadList.put(0, new Lead("Ana Campos",
@@ -59,8 +69,10 @@ public class CrmUnit3Application implements CommandLineRunner {
 					.trim();
 
 			//Go to utils Command to the this method functionality
-			commandReader(userInput);
+			Command command=new Command(salesRepRepository,  leadRepository, contactRepository,opportunityRepository, accountRepository);
+			command.commandReader(userInput);
 		}
+
 
 
 	}

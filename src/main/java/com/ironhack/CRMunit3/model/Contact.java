@@ -8,7 +8,7 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int contactId;
-    private String name;
+    private String contactName;
     private String phoneNumber;
     private String email;
     private String companyName;
@@ -24,14 +24,14 @@ public class Contact {
                    String phoneNumber,
                    String email,
                    String companyName) {
-        this.name = name;
+        this.contactName = name;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.companyName = companyName;
     }
 
     public String getName() {
-        return name;
+        return contactName;
     }
 
     public String getPhoneNumber() {
@@ -61,7 +61,7 @@ public class Contact {
     @Override
     public String toString() {
         return "Contact: " +
-                "\n  name = " + name +
+                "\n  name = " + contactName +
                 ", \n  phoneNumber = " + phoneNumber +
                 ", \n  email = " + email  +
                 ", \n  companyName = " + companyName;
@@ -72,7 +72,7 @@ public class Contact {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contact contact = (Contact) o;
-        return Objects.equals(name, contact.name) &&
+        return Objects.equals(contactName, contact.contactName) &&
                Objects.equals(phoneNumber, contact.phoneNumber) &&
                Objects.equals(email, contact.email) &&
                Objects.equals(companyName, contact.companyName);

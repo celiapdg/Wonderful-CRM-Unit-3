@@ -1,5 +1,6 @@
 package com.ironhack.CRMunit3.model;
 
+
 import javax.persistence.*;
 import java.util.*;
 
@@ -8,7 +9,7 @@ public class SalesRep {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int salesRepId;
+    private Integer salesRepId;
     private String name;
 
     @OneToMany(mappedBy = "salesRep")
@@ -23,11 +24,12 @@ public class SalesRep {
     public SalesRep( String name) {
         this.name = name;
     }
-    public int getSalesRepId() {
+
+    public Integer getSalesRepId() {
         return salesRepId;
     }
 
-    public void setSalesRepId(int salesRepId) {
+    public void setSalesRepId(Integer salesRepId) {
         this.salesRepId = salesRepId;
     }
 
@@ -53,5 +55,15 @@ public class SalesRep {
 
     public void setLeads(List<Lead> leads) {
         this.leads = leads;
+    }
+
+    @Override
+    public String toString() {
+        return "SalesRep{" +
+                "salesRepId=" + salesRepId +
+                ", name='" + name + '\'' +
+                ", opportunities=" + opportunities +
+                ", leads=" + leads +
+                '}';
     }
 }

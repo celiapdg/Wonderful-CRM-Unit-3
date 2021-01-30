@@ -19,7 +19,7 @@ public class Opportunity {
     private Contact decisionMaker;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status opportunityStatus;
 
     @ManyToOne
     @JoinColumn(name = "sales_rep_id")
@@ -38,7 +38,7 @@ public class Opportunity {
         this.product = product;
         this.decisionMaker = decisionMaker;
         this.salesRep = salesRep;
-        this.status = Status.OPEN;
+        this.opportunityStatus = Status.OPEN;
     }
 
     public Account getAccountId() {
@@ -50,7 +50,7 @@ public class Opportunity {
     }
 
     public void setStatus(Status status) {
-        this.status = status;
+        this.opportunityStatus = status;
     }
 
     public Product getProduct() {
@@ -62,7 +62,7 @@ public class Opportunity {
     }
 
     public Status getStatus() {
-        return status;
+        return opportunityStatus;
     }
 
     public int getOpportunityId() {
@@ -86,7 +86,8 @@ public class Opportunity {
         return (char)27 + "[34mOpportunity " + opportunityId+
                 "\nproduct = " + product +
                 "\namount = " + quantity +
-                ", \nstatus = " + status +
+                ", \nstatus = " + opportunityStatus +
+                ", \nsalesRep = " + salesRep.getName() +
                 ", \n" + decisionMaker;
     }
 
@@ -98,6 +99,6 @@ public class Opportunity {
         return quantity == that.quantity &&
                product == that.product &&
                Objects.equals(decisionMaker, that.decisionMaker) &&
-               status == that.status;
+                opportunityStatus == that.opportunityStatus;
     }
 }
