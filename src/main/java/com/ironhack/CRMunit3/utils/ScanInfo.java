@@ -2,9 +2,7 @@ package com.ironhack.CRMunit3.utils;
 
 import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
-import com.ironhack.CRMunit3.repository.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.*;
+import com.ironhack.CRMunit3.repository.SalesRepRepository;
 
 
 import java.util.Scanner;
@@ -12,7 +10,12 @@ import java.util.Scanner;
 import static com.ironhack.CRMunit3.utils.Checker.*;
 
 public class ScanInfo {
-    private static Scanner scanner = new Scanner(System.in);
+    private final static Scanner scanner = new Scanner(System.in);
+    private Checker checker;
+
+    public ScanInfo(SalesRepRepository salesRepRepository) {
+        this.checker = new Checker(salesRepRepository);
+    }
 
     public static String askName(){
         //Set a boolean to false to enter the loop
@@ -107,23 +110,21 @@ public class ScanInfo {
         return compName;
     }
 
-    public static Integer askSalesRep(){
-        boolean validSalesRepId = false;
+    public SalesRep askSalesRep(){
         String salesRepId ="";
-        Integer salesRep = 0;
+        SalesRep salesRep = null;
 
-        while (!validSalesRepId){
-            System.out.println((char)27 + "[39mPlease, provide a Sales Rep id");
-            salesRepId = scanner.nextLine().trim();
+        while (salesRep==null){
             try {
-                validSalesRepId = checkSalesRepId(salesRepId);
-                salesRep=Integer.parseInt(salesRepId);
-
-            }catch (Exception e){
-//                TODO poner excepciones
+                System.out.println((char)27 + "[39mPlease, provide a Sales Rep id");
+                salesRepId = scanner.nextLine().trim();
+                salesRep = checker.checkSalesRepId(Integer.parseInt(salesRepId));
+            }catch (NumberFormatException e) {
+                System.out.println((char) 27 + "[31mType a valid number format");
+            }catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
             }
         }
-
         return salesRep;
     }
 

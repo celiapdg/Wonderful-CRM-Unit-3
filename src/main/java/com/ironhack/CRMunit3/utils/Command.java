@@ -4,7 +4,6 @@ import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
 import com.ironhack.CRMunit3.repository.*;
 
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
 import javax.sound.sampled.LineUnavailableException;
@@ -29,12 +28,15 @@ public class Command {
     OpportunityRepository opportunityRepository;
     AccountRepository accountRepository;
 
+    private ScanInfo scanInfo;
+
     public Command(SalesRepRepository salesRepRepository, LeadRepository leadRepository, ContactRepository contactRepository, OpportunityRepository opportunityRepository, AccountRepository accountRepository) {
         this.salesRepRepository = salesRepRepository;
         this.leadRepository = leadRepository;
         this.contactRepository = contactRepository;
         this.opportunityRepository = opportunityRepository;
         this.accountRepository = accountRepository;
+        this.scanInfo = new ScanInfo(salesRepRepository);
     }
     //method called in main
     public void commandReader(String userInput)
@@ -59,8 +61,7 @@ public class Command {
                                 String phone = askPhone();
                                 String email = askEmail();
                                 String company = askCompName();
-                                Integer salesRepId = askSalesRep();
-                                SalesRep salesRep=salesRepRepository.findBySalesRepId(salesRepId);
+                                SalesRep salesRep = scanInfo.askSalesRep();
 
                                 //this method is defined below
                                 newLead(name, phone, email, company, salesRep);
@@ -274,7 +275,6 @@ public class Command {
     }
 
     public  void showLeads (){
-
         List<Lead> leadList = leadRepository.findAll();
 //        If there are no leads left
         if (leadList.isEmpty()){

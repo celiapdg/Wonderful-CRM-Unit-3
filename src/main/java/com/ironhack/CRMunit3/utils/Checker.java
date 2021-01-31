@@ -1,11 +1,20 @@
 package com.ironhack.CRMunit3.utils;
 
 import com.ironhack.CRMunit3.enums.*;
+import com.ironhack.CRMunit3.model.SalesRep;
+import com.ironhack.CRMunit3.repository.SalesRepRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.regex.Pattern;
 
 public class Checker {
+
+    private SalesRepRepository salesRepRepository;
+
+    public Checker(SalesRepRepository salesRepRepository) {
+        this.salesRepRepository = salesRepRepository;
+    }
 
     public static boolean checkName(String name) {
         if (!name.trim().contains(" ")) {
@@ -23,13 +32,12 @@ public class Checker {
         return true;
     }
 
-    public static boolean checkSalesRepId(String idRep){
-        int id = Integer.parseInt(idRep);
-
-
-//        TODO comprobamos si el id está en la base de datos
-
-        return true;
+    public SalesRep checkSalesRepId(int id){
+        SalesRep salesRep = salesRepRepository.findBySalesRepId(id);
+        if(salesRep == null) {
+            throw new IllegalArgumentException((char)27 + "[31mThat SalesRep does not exists");
+        }
+        return salesRep;
     }
 
 

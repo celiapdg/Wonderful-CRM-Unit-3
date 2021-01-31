@@ -68,7 +68,15 @@ class OpportunityRepositoryTest {
     }
 
     @Test
-    void findByOpportunityId() {
+    void validId_findByOpportunityId() {
+        int id = opportunityRepository.findAll().get(0).getOpportunityId();
+        Opportunity result = opportunityRepository.findByOpportunityId(id);
+        assertEquals("Albacete", result.getAccountId().getCity());
+    }
+
+    @Test
+    void notValidId_findByOpportunityId() {
+        assertEquals(null, opportunityRepository.findByOpportunityId(54546));
     }
 
     @Test
@@ -96,6 +104,9 @@ class OpportunityRepositoryTest {
 
     @Test
     void findNumberOfOpportunitiesPerCityWithStatus() {
+        List<Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerCityWithStatus(Status.OPEN);
+        assertEquals(1L, result.get(0)[1]);
+        assertEquals("Albacete", result.get(0)[0]);
     }
 
     @Test
@@ -114,10 +125,16 @@ class OpportunityRepositoryTest {
 
     @Test
     void findNumberOfOpportunitiesPerIndustry() {
+        List<Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerIndustry();
+        assertEquals(1L, result.get(0)[1]);
+        assertEquals(Industry.OTHER, result.get(0)[0]);
     }
 
     @Test
     void findNumberOfOpportunitiesPerIndustryWithStatus() {
+        List<Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerIndustryWithStatus(Status.OPEN);
+        assertEquals(1L, result.get(0)[1]);
+        assertEquals(Industry.OTHER, result.get(0)[0]);
     }
 
 
@@ -158,5 +175,19 @@ class OpportunityRepositoryTest {
         List<Object[]> result = opportunityRepository.findMinGroupByProduct();
         assertEquals(3, result.size());
         assertEquals((double) 40, result.get(0)[1]);
+    }
+
+    @Test
+    void findNumberOfOpportunitiesPerProduct() {
+        List<Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerProduct();
+        assertEquals(1L, result.get(0)[1]);
+        assertEquals(Product.BOX, result.get(0)[0]);
+    }
+
+    @Test
+    void findNumberOfOpportunitiesPerProductWithStatus() {
+        List<Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerProductWithStatus(Status.OPEN);
+        assertEquals(1L, result.get(0)[1]);
+        assertEquals(Product.BOX, result.get(0)[0]);
     }
 }
