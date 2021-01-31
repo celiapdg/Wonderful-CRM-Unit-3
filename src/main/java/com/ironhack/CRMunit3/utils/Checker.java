@@ -2,7 +2,7 @@ package com.ironhack.CRMunit3.utils;
 
 import com.ironhack.CRMunit3.enums.*;
 
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Checker {
@@ -79,7 +79,6 @@ public class Checker {
         }
         return true;
     }
-
 
     public static Integer checkValidId(String strId){
         Integer id = Integer.parseInt(strId);

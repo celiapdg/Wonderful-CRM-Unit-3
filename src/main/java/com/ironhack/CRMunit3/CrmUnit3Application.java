@@ -1,13 +1,9 @@
 package com.ironhack.CRMunit3;
-
-import com.ironhack.CRMunit3.enums.*;
-import com.ironhack.CRMunit3.model.*;
 import com.ironhack.CRMunit3.repository.*;
 import com.ironhack.CRMunit3.utils.*;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.*;
 
 import javax.sound.sampled.*;
 import java.io.*;
@@ -42,20 +38,23 @@ public class CrmUnit3Application implements CommandLineRunner {
 		//set userInput to an empty string to enter the next loop
 		String userInput="";
 
+		Command command=new Command(salesRepRepository,  leadRepository, contactRepository,opportunityRepository, accountRepository);
+
 		//This loops runs until the user chooses the exit option
-//		while (!userInput.equals("exit")){
-//
-//			showMainMenu();
-//			// Get input from the user organized
-//			userInput = myScanner.nextLine()
-//					.toLowerCase()
-//					.trim();
-//
-//			//Go to utils Command to the this method functionality
-//			Command command=new Command(salesRepRepository,  leadRepository, contactRepository,opportunityRepository, accountRepository);
-//			command.commandReader(userInput);
-//		}
-//		System.exit(0);
+		while (!userInput.equals("exit")){
+
+			showMainMenu();
+			// Get input from the user organized
+			userInput = myScanner.nextLine()
+					.toLowerCase()
+					.trim();
+
+			//Go to utils Command to the this method functionality
+			command.commandReader(userInput);
+		}
+
+
+
 	}
 	public static void showMainMenu(){
 		System.out.println((char)27 + "[49m" + (char)27 + "[39mWhat do you want to do?:");

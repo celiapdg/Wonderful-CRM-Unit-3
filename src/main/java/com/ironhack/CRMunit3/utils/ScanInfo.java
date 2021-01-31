@@ -213,7 +213,6 @@ public class ScanInfo {
         return answer;
     }
 
-
     public static Integer askAccountId(){
         String accountId = "";
         Integer id = 0;

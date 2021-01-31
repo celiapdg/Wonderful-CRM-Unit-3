@@ -9,7 +9,6 @@ import org.springframework.stereotype.*;
 import java.io.InvalidObjectException;
 import java.util.*;
 
-import static com.ironhack.CRMunit3.utils.Checker.checkValidId;
 import static com.ironhack.CRMunit3.utils.ScanInfo.*;
 
 @Service
@@ -177,7 +176,6 @@ public class Command {
         }
     }
 
-
     public SalesRep newSalesRep (String name){
 
         SalesRep salesRep=new SalesRep(name);
@@ -337,7 +335,6 @@ public class Command {
             default -> throw new InvalidObjectException((char) 27 + "[31mInvalid object type");
         }
     }
-
 
     //Change opportunity status, receives opportunity id and List
     public void closeOpportunity(String closeType, String id){
