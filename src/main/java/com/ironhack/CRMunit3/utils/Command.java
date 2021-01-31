@@ -4,6 +4,7 @@ import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
 import com.ironhack.CRMunit3.repository.*;
 
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
 import java.io.InvalidObjectException;
@@ -339,7 +340,7 @@ public class Command {
     //Change opportunity status, receives opportunity id and List
     public void closeOpportunity(String closeType, String id){
         //checking for invalid id
-        checkValidId(id);
+        Checker.checkValidId(id);
         Integer opportunityId = Integer.parseInt(id);
         Opportunity opportunity = opportunityRepository.findByOpportunityId(opportunityId);
 
