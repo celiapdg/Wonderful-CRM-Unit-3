@@ -137,6 +137,10 @@ public class Command {
                     bipSound.playSound();
                     break;
 
+                case "report":
+                    reportOptions(arr);
+                    break;
+
                 case "exit":
                     //ONLY COMMAND THAT EXITS THE APPLICATION
                     System.out.println((char)27 + "[46m" + (char)27 + "[30mThank you for using the best CRM in the world");
@@ -144,7 +148,6 @@ public class Command {
                     bipSound.closeSound();
                     errorSound.closeSound();
                     exitSound.closeSound();
-
                     break;
 
                 default:
@@ -361,6 +364,169 @@ public class Command {
                     opportunityRepository.save(opportunity);
                 }
             }
+        }
+    }
+
+    public void reportOptions(String[] arr) throws InvalidObjectException {
+        switch (arr[3]){
+            case "salesrep":
+                switch (arr[1]){
+                    case "lead":
+                        List<Object[]> leadBySalesRep = leadRepository.countBySalesRep();
+                        for (Object[] o: leadBySalesRep) {
+                            System.out.println("SalesRep " + o[0] + " has created " + o[1] + " leads.");
+                        }
+                        break;
+                    case "opportunity":
+                        List<Object[]> opBySalesRep = opportunityRepository.findNumberOfOpportunitiesPerSalesRep();
+                        for (Object[] o: opBySalesRep) {
+                            System.out.println("SalesRep " + o[0] + " has created " + o[1] + " opportunities.");
+                        }
+                        break;
+                    case "closed-lost":
+                        List<Object[]> opByStatusCL = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.CLOSED_LOST);
+                        for (Object[] o: opByStatusCL) {
+                            System.out.println("SalesRep " + o[0] + " has lost " + o[1] + " opportunities.");
+                        }
+                        break;
+                    case "closed-won":
+                        List<Object[]> opByStatusCW = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.CLOSED_WON);
+                        for (Object[] o: opByStatusCW) {
+                            System.out.println("SalesRep " + o[0] + " has won " + o[1] + " opportunities.");
+                        }
+                        break;
+                    case "open":
+                        List<Object[]> opByStatusO = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.OPEN);
+                        for (Object[] o: opByStatusO) {
+                            System.out.println("SalesRep " + o[0] + " has " + o[1] + " opportunities open.");
+                        }
+                        break;
+                    default:
+                        throw new InvalidObjectException("Invalid object type");
+                }
+                break;
+            case "product":
+                switch (arr[1]){
+                    case "opportunity":
+                        List<Object[]> opByProduct = opportunityRepository.findNumberOfOpportunitiesPerProduct();
+                        for (Object[] o: opByProduct) {
+                            System.out.println("The product " + o[0] + " is ordered in " + o[1] + " opportunities.");
+                        }
+                        break;
+                    case "closed-lost":
+                        List<Object[]> opByProductCL = opportunityRepository.findNumberOfOpportunitiesPerProductWithStatus(Status.CLOSED_LOST);
+                        for (Object[] o: opByProductCL) {
+                            System.out.println("The product " + o[0] + " is ordered in " + o[1] + " lost opportunities.");
+                        }
+                        break;
+                    case "closed-won":
+                        List<Object[]> opByProductCW = opportunityRepository.findNumberOfOpportunitiesPerProductWithStatus(Status.CLOSED_WON);
+                        for (Object[] o: opByProductCW) {
+                            System.out.println("The product " + o[0] + " is ordered in " + o[1] + " won opportunities.");
+                        }
+                        break;
+                    case "open":
+                        List<Object[]> opByProductO = opportunityRepository.findNumberOfOpportunitiesPerProductWithStatus(Status.OPEN);
+                        for (Object[] o: opByProductO) {
+                            System.out.println("The product " + o[0] + " is ordered in " + o[1] + " open opportunities.");
+                        }
+                        break;
+                    default:
+                        throw new InvalidObjectException("Invalid object type");
+                }
+                break;
+            case "city":
+                switch (arr[1]){
+                    case "opportunity":
+                        List<Object[]> opByCity = opportunityRepository.findNumberOfOpportunitiesPerCity();
+                        for (Object[] o: opByCity) {
+                            System.out.println("The city " + o[0] + " appears in " + o[1] + " opportunities.");
+                        }
+                        break;
+                    case "closed-lost":
+                        List<Object[]> opByCityCL = opportunityRepository.findNumberOfOpportunitiesPerCityWithStatus(Status.CLOSED_LOST);
+                        for (Object[] o: opByCityCL) {
+                            System.out.println("The city " + o[0] + " appears in " + o[1] + " lost opportunities.");
+                        }
+                        break;
+                    case "closed-won":
+                        List<Object[]> opByCityCW = opportunityRepository.findNumberOfOpportunitiesPerCityWithStatus(Status.CLOSED_WON);
+                        for (Object[] o: opByCityCW) {
+                            System.out.println("The city " + o[0] + " appears in " + o[1] + " won opportunities.");
+                        }
+                        break;
+                    case "open":
+                        List<Object[]> opByCityO = opportunityRepository.findNumberOfOpportunitiesPerCityWithStatus(Status.OPEN);
+                        for (Object[] o: opByCityO) {
+                            System.out.println("The city " + o[0] + " appears in " + o[1] + " open opportunities.");
+                        }
+                        break;
+                    default:
+                        throw new InvalidObjectException("Invalid object type");
+                }
+                break;
+            case "country":
+                switch (arr[1]){
+                    case "opportunity":
+                        List<Object[]> opByCountry = opportunityRepository.findNumberOfOpportunitiesPerCountry();
+                        for (Object[] o: opByCountry) {
+                            System.out.println("The country " + o[0] + " appears in " + o[1] + " opportunities.");
+                        }
+                        break;
+                    case "closed-lost":
+                        List<Object[]> opByCountryCL = opportunityRepository.findNumberOfOpportunitiesPerCountryWithStatus(Status.CLOSED_LOST);
+                        for (Object[] o: opByCountryCL) {
+                            System.out.println("The country " + o[0] + " appears in " + o[1] + " lost opportunities.");
+                        }
+                        break;
+                    case "closed-won":
+                        List<Object[]> opByCountryCW = opportunityRepository.findNumberOfOpportunitiesPerCountryWithStatus(Status.CLOSED_WON);
+                        for (Object[] o: opByCountryCW) {
+                            System.out.println("The country " + o[0] + " appears in " + o[1] + " won opportunities.");
+                        }
+                        break;
+                    case "open":
+                        List<Object[]> opByCountryW = opportunityRepository.findNumberOfOpportunitiesPerCountryWithStatus(Status.OPEN);
+                        for (Object[] o: opByCountryW) {
+                            System.out.println("The country " + o[0] + " appears in " + o[1] + " open opportunities.");
+                        }
+                        break;
+                    default:
+                        throw new InvalidObjectException("Invalid object type");
+                }
+                break;
+            case "industry":
+                switch (arr[1]){
+                    case "opportunity":
+                        List<Object[]> opByIndustry = opportunityRepository.findNumberOfOpportunitiesPerIndustry();
+                        for (Object[] o: opByIndustry) {
+                            System.out.println(o[1] + " opportunities refer to " + o[0] + " industry.");
+                        }
+                        break;
+                    case "closed-lost":
+                        List<Object[]> opByIndustryCL = opportunityRepository.findNumberOfOpportunitiesPerIndustryWithStatus(Status.CLOSED_LOST);
+                        for (Object[] o: opByIndustryCL) {
+                            System.out.println(o[1] + " lost opportunities refer to " + o[0] + " industry.");
+                        }
+                        break;
+                    case "closed-won":
+                        List<Object[]> opByIndustryCW = opportunityRepository.findNumberOfOpportunitiesPerIndustryWithStatus(Status.CLOSED_WON);
+                        for (Object[] o: opByIndustryCW) {
+                            System.out.println(o[1] + " won opportunities refer to " + o[0] + " industry.");
+                        }
+                        break;
+                    case "open":
+                        List<Object[]> opByIndustryO = opportunityRepository.findNumberOfOpportunitiesPerIndustryWithStatus(Status.OPEN);
+                        for (Object[] o: opByIndustryO) {
+                            System.out.println(o[1] + " opportunities refer to " + o[0] + " industry.");
+                        }
+                        break;
+                    default:
+                        throw new InvalidObjectException("Invalid object type");
+                }
+                break;
+            default:
+                throw new InvalidObjectException("Invalid object type");
         }
     }
 
