@@ -3,6 +3,9 @@ package com.ironhack.CRMunit3.utils;
 import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
 import com.ironhack.CRMunit3.repository.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.context.annotation.*;
+import org.springframework.stereotype.*;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -11,6 +14,7 @@ import java.util.*;
 
 import static com.ironhack.CRMunit3.utils.ScanInfo.*;
 
+@ComponentScan
 public class Command {
 
     public static Sound errorSound = new Sound("error.wav");
@@ -24,7 +28,6 @@ public class Command {
 
     //method called in main
     public static void commandReader(String userInput) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-
         //separate the words in the input
         String[] arr = userInput.split(" ");
 
