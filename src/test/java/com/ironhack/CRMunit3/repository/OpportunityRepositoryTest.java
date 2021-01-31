@@ -1,11 +1,7 @@
 package com.ironhack.CRMunit3.repository;
 
-import com.ironhack.CRMunit3.enums.Product;
-import com.ironhack.CRMunit3.enums.Status;
-import com.ironhack.CRMunit3.model.Contact;
-import com.ironhack.CRMunit3.model.Lead;
-import com.ironhack.CRMunit3.model.Opportunity;
-import com.ironhack.CRMunit3.model.SalesRep;
+import com.ironhack.CRMunit3.enums.*;
+import com.ironhack.CRMunit3.model.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +23,8 @@ class OpportunityRepositoryTest {
     OpportunityRepository opportunityRepository;
     @Autowired
     ContactRepository contactRepository;
+    @Autowired
+    AccountRepository accountRepository;
 
     @BeforeEach
     void setUp() {
@@ -53,6 +51,11 @@ class OpportunityRepositoryTest {
         contactRepository.saveAll(List.of(contact1,contact2, contact3));
 
         opportunityRepository.saveAll(List.of(opportunity1, opportunity2, opportunity3));
+
+        Account account = new Account(Industry.OTHER, 40, "Albacete", "ESSSSPAÑA", contact1, opportunity1);
+        accountRepository.save(account);
+        opportunity1.setAccount(account);
+        opportunityRepository.save(opportunity1);
     }
 
     @AfterEach
@@ -80,5 +83,28 @@ class OpportunityRepositoryTest {
         List <Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.OPEN);
         assertEquals(1,result.size());
         assertEquals(1L,result.get(0)[1]);
+    }
+
+    @Test
+    void findNumberOfOpportunitiesPerCity() {
+        List<Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerCity();
+        assertEquals(1L, result.get(0)[1]);
+        assertEquals("Albacete",result.get(0)[0]);
+    }
+
+    @Test
+    void findNumberOfOpportunitiesPerCountry() {
+    }
+
+    @Test
+    void findNumberOfOpportunitiesPerCountryWithStatus() {
+    }
+
+    @Test
+    void findNumberOfOpportunitiesPerIndustry() {
+    }
+
+    @Test
+    void findNumberOfOpportunitiesPerIndustryWithStatus() {
     }
 }

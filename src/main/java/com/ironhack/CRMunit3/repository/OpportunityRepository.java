@@ -26,21 +26,21 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, Intege
 
 //   TODO: Joins
 
-//    @Query("SELECT COUNT(*), salesRep FROM Opportunity GROUP BY city")
-//    public List<Object[]> findNumberOfOpportunitiesPerCity();
-//
-//    @Query("SELECT COUNT(*), salesRep FROM Opportunity WHERE status = :status GROUP BY city")
-//    public List<Object[]> findNumberOfOpportunitiesPerCityWithStatus(@Param("status") Status status);
-//
-//    @Query("SELECT COUNT(*), salesRep FROM Opportunity GROUP BY country")
-//    public List<Object[]> findNumberOfOpportunitiesPerCountry();
-//
-//    @Query("SELECT COUNT(*), salesRep FROM Opportunity WHERE status = :status GROUP BY country")
-//    public List<Object[]> findNumberOfOpportunitiesPerCountryWithStatus(@Param("status") Status status);
-//
-//    @Query("SELECT COUNT(*), salesRep FROM Opportunity GROUP BY industry")
-//    public List<Object[]> findNumberOfOpportunitiesPerIndustry();
-//
-//    @Query("SELECT COUNT(*), salesRep FROM Opportunity WHERE status = :status GROUP BY industry")
-//    public List<Object[]> findNumberOfOpportunitiesPerIndustryWithStatus(@Param("status") Status status);
+    @Query("SELECT a.city, COUNT(*) FROM Opportunity o JOIN Account a ON a.accountId = o.account GROUP BY a.city")
+    public List<Object[]> findNumberOfOpportunitiesPerCity();
+
+    @Query("SELECT a.city, COUNT(*) FROM Opportunity o JOIN Account a ON a.accountId = o.account WHERE o.status = :status GROUP BY a.city")
+    public List<Object[]> findNumberOfOpportunitiesPerCityWithStatus(@Param("status") Status status);
+
+    @Query("SELECT a.country, COUNT(*) FROM Opportunity o JOIN Account a ON a.accountId = o.account GROUP BY a.country")
+    public List<Object[]> findNumberOfOpportunitiesPerCountry();
+
+    @Query("SELECT a.country, COUNT(*) FROM Opportunity o JOIN Account a ON a.accountId = o.account WHERE o.status = :status GROUP BY a.country")
+    public List<Object[]> findNumberOfOpportunitiesPerCountryWithStatus(@Param("status") Status status);
+
+    @Query("SELECT a.industry, COUNT(*) FROM Opportunity o JOIN Account a ON a.accountId = o.account GROUP BY a.industry")
+    public List<Object[]> findNumberOfOpportunitiesPerIndustry();
+
+    @Query("SELECT a.industry, COUNT(*) FROM Opportunity o JOIN Account a ON a.accountId = o.account WHERE o.status = :status GROUP BY a.industry")
+    public List<Object[]> findNumberOfOpportunitiesPerIndustryWithStatus(@Param("status") Status status);
 }
