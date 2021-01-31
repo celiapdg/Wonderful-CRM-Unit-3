@@ -3,8 +3,8 @@ package com.ironhack.CRMunit3.utils;
 import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
 import com.ironhack.CRMunit3.repository.*;
+
 import org.springframework.beans.factory.annotation.*;
-import org.springframework.context.annotation.*;
 import org.springframework.stereotype.*;
 
 import javax.sound.sampled.LineUnavailableException;
@@ -14,20 +14,32 @@ import java.util.*;
 
 import static com.ironhack.CRMunit3.utils.ScanInfo.*;
 
-@ComponentScan
+@Service
 public class Command {
+
 
     public static Sound errorSound = new Sound("error.wav");
     public static Sound bipSound = new Sound("bip.wav");
     public static Sound exitSound = new Sound("exit.wav");
-    public static SalesRepRepository salesRepRepository;
-    public static LeadRepository leadRepository;
-    public static ContactRepository contactRepository;
-    public static OpportunityRepository opportunityRepository;
-    public static AccountRepository accountRepository;
 
+
+    SalesRepRepository salesRepRepository;
+    LeadRepository leadRepository;
+    ContactRepository contactRepository;
+    OpportunityRepository opportunityRepository;
+    AccountRepository accountRepository;
+
+    public Command(SalesRepRepository salesRepRepository, LeadRepository leadRepository, ContactRepository contactRepository, OpportunityRepository opportunityRepository, AccountRepository accountRepository) {
+        this.salesRepRepository = salesRepRepository;
+        this.leadRepository = leadRepository;
+        this.contactRepository = contactRepository;
+        this.opportunityRepository = opportunityRepository;
+        this.accountRepository = accountRepository;
+    }
     //method called in main
-    public static void commandReader(String userInput) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+    public void commandReader(String userInput)
+            throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+
         //separate the words in the input
         String[] arr = userInput.split(" ");
 
@@ -47,7 +59,8 @@ public class Command {
                                 String phone = askPhone();
                                 String email = askEmail();
                                 String company = askCompName();
-                                SalesRep salesRep = askSalesRep();
+                                Integer salesRepId = askSalesRep();
+                                SalesRep salesRep=salesRepRepository.findBySalesRepId(salesRepId);
 
                                 //this method is defined below
                                 newLead(name, phone, email, company, salesRep);
@@ -58,25 +71,51 @@ public class Command {
                 case "convert":
                     //if the first word is convert  the method checks if the second is a number if it is not catches the error
                     int id = Integer.parseInt(arr[1]);
-
+                    Lead lead=leadRepository.findByLeadId(id);
                     //This method is defined below
-                    Contact contact = createContact(leadRepository.findByLeadId(id));
+                    Contact contact = createContact(lead);
 
                     //go to utils ScanInfo to check how these work
                     Product product = askProduct();
                     int quantity = askQuantity();
 
                     //method implementation below
-                    Opportunity opportunity = createOpportunity(product, quantity, contact);
+                    Opportunity opportunity = createOpportunity(product, quantity, contact, lead.getSalesRep());
 
-                    //go to utils ScanInfo to check how these work
-                    Industry industry = askIndustry();
-                    int numOfEmployees = askEmployees();
-                    String city = askCity();
-                    String country = askCountry();
+                    Account account = new Account();
 
-                    //the next two methods are also below
-                    Account account = createAccount(industry, numOfEmployees, city, country, contact, opportunity);
+                    String answer=askNewAccount();
+
+                    switch (answer){
+                        case"n":
+                            if (accountRepository.findAll().isEmpty()){
+                                System.out.println((char)27 + "[31mThere is no account created yet, you must create one");
+                            }else {
+                                Integer accountId=askAccountId();
+                                account = accountRepository.findByAccountId(accountId);
+                                account.getOpportunityList().add(opportunity);
+                                account.getContactList().add(contact);
+                                accountRepository.save(account);
+                            break;
+                            }
+                        case"y":
+
+                            //go to utils ScanInfo to check how these work
+                            Industry industry = askIndustry();
+                            int numOfEmployees = askEmployees();
+                            String city = askCity();
+                            String country = askCountry();
+
+                            //the next two methods are also below
+                            account = createAccount(industry, numOfEmployees, city, country, contact, opportunity);
+                            break;
+                    }
+
+                    opportunity.setAccount(account);
+                    opportunityRepository.save(opportunity);
+                    contact.setAccountId(account);
+                    contactRepository.save(contact);
+
                     removeLead(leadRepository.findByLeadId(id));
                     System.out.println((char)27 + "[32mNew opportunity created!!\n"+opportunity);
                     bipSound.playSound();
@@ -92,7 +131,10 @@ public class Command {
                             //if the second word is opportunities enters here
                             showOpportunities();
                             break;
-
+                        case "sales":
+                            //if the second word is opportunities enters here
+                            showSalesReps();
+                            break;
                         default:
                             //default to make sure every option is managed
                             System.out.println((char)27 + "[31mThat is not a valid command");
@@ -156,30 +198,33 @@ public class Command {
             }
     }
 
-    public static void newSalesRep (String name){
+    public SalesRep newSalesRep (String name){
 
         SalesRep salesRep=new SalesRep(name);
 
         salesRepRepository.save(salesRep);
         System.out.println((char)27 + "[32mNew Sales Rep created!!\n"+salesRep);
+        return salesRep;
     }
 
     //Receives the user input and creates Lead with automatic ID,
     // it also receives the Opportunities list to store the new one
-    public static Lead newLead (String name,
-                                String phone,
+    public  Lead newLead (String name, String phone,
                                 String email,
                                 String compName,
                                 SalesRep salesRep){
 
+
+
         Lead lead = new Lead(name, phone, email, compName, salesRep);
+        leadRepository.save(lead);
         System.out.println((char)27 + "[32mNew lead created!!\n"+lead);
-        return leadRepository.save(lead);
+        return lead;
 
     }
 
     //Receives the lead info and creates Contact
-    public static Contact createContact(Lead lead){
+    public  Contact createContact(Lead lead){
         String name = lead.getName();
         String phoneNumber = lead.getPhoneNumber();
         String email = lead.getEmail();
@@ -189,32 +234,46 @@ public class Command {
 
     //Receives the user input, product and Contact and creates Opportunity with automatic ID,
     // it also receives the Opportunities list to store the new one
-    public static Opportunity createOpportunity(Product product,
-                                                int quantity,
-                                                Contact decisionMaker){
-        SalesRep salesRep=new SalesRep("Julia Campos");
+    public  Opportunity createOpportunity(Product product,int quantity,Contact decisionMaker, SalesRep salesRep){
+
         Opportunity opportunity = new Opportunity(product, quantity, decisionMaker, salesRep);
         return opportunityRepository.save(opportunity);
     }
 
     //Receives the user input, industry and Opportunity and creates Account
-    public static Account createAccount(Industry industry,
+    public  Account createAccount(Industry industry,
                                         int numOfEmployees,
                                         String city,
                                         String country,
                                         Contact contact,
                                         Opportunity opportunity){
-
-        return new Account(industry, numOfEmployees, city, country, contact,opportunity);
+        Account account = accountRepository.save(new Account(industry, numOfEmployees, city, country, contact,opportunity)) ;
+        System.out.println((char)27 + "[32mAccount created!!\n");
+        return account;
     }
 
     //Receives id of the Lead and the Lead list and erases
-    public static void removeLead(Lead lead){
+    public void removeLead(Lead lead){
         leadRepository.delete(lead);
     }
 
 
-    public static void showLeads (){
+    public  void showSalesReps (){
+
+        List<SalesRep> salesRepList = salesRepRepository.findAll();
+//        If there are no leads left
+        if (salesRepList.isEmpty()){
+//            Out prints a message
+            System.out.println((char)27 + "[31mYou don't have leads in this moment");
+        }else {
+            for (SalesRep salesRep : salesRepList) {
+                System.out.println(salesRep);
+                System.out.println("");
+            }
+        }
+    }
+
+    public  void showLeads (){
 
         List<Lead> leadList = leadRepository.findAll();
 //        If there are no leads left
@@ -230,7 +289,7 @@ public class Command {
     }
 
 
-    public static void showOpportunities (){
+    public  void showOpportunities (){
 
         List<Opportunity> opportunityList = opportunityRepository.findAll();
         //If there are no opportunities yet
@@ -246,7 +305,7 @@ public class Command {
     }
 
     // Takes the lead id and the lead List and shows its info
-    public static void lookupLead (String id){
+    public  void lookupLead (String id){
         //checking for invalid id
         Integer leadId = Integer.parseInt(id);
         if (leadId < 0){
@@ -263,7 +322,7 @@ public class Command {
     }
 
     // Takes the lead id and the opportunity List and shows its info
-    public static void lookupOpportunity (String id){
+    public  void lookupOpportunity (String id){
         //checking for invalid id
         Integer opportunityId = Integer.parseInt(id);
         if (opportunityId < 0){
@@ -279,7 +338,7 @@ public class Command {
     }
 
     //Change opportunity status, receives opportunity id and List
-    public static void closeLost (String id){
+    public  void closeLost (String id){
         //checking for invalid id
         Integer opportunityId = Integer.parseInt(id);
         if (opportunityId < 0){
@@ -306,7 +365,7 @@ public class Command {
     }
 
     //Change opportunity status, receives opportunity id and List
-    public static void closeWon (String id){
+    public  void closeWon (String id){
 
         //checking for invalid id
         Integer opportunityId = Integer.parseInt(id);

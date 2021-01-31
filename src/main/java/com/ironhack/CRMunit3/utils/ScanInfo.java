@@ -2,6 +2,9 @@ package com.ironhack.CRMunit3.utils;
 
 import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
+import com.ironhack.CRMunit3.repository.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.stereotype.*;
 
 
 import java.util.Scanner;
@@ -104,20 +107,23 @@ public class ScanInfo {
         return compName;
     }
 
-    public static SalesRep askSalesRep(){
+    public static Integer askSalesRep(){
         boolean validSalesRepId = false;
-        String salesRepId = "";
-        SalesRep salesRep = null;
+        String salesRepId ="";
+        Integer salesRep = 0;
 
         while (!validSalesRepId){
-            System.out.println((char)27 + "[39mPlease, provide a Company name");
+            System.out.println((char)27 + "[39mPlease, provide a Sales Rep id");
             salesRepId = scanner.nextLine().trim();
             try {
                 validSalesRepId = checkSalesRepId(salesRepId);
+                salesRep=Integer.parseInt(salesRepId);
+
             }catch (Exception e){
 //                TODO poner excepciones
             }
         }
+
         return salesRep;
     }
 
@@ -198,6 +204,33 @@ public class ScanInfo {
         }
         return industryChosen;
     }
+
+    public static String askNewAccount(){
+        String answer="";
+        boolean validResponse = false;
+        while(!validResponse){
+            System.out.println((char)27 + "[39m Would yo like yo create an account for this opportunity? Y/N");
+            answer= scanner.nextLine().trim().toLowerCase();
+            if(answer.equals("y")||answer.equals("n")) {
+                validResponse = true;
+            }
+        }
+        return answer;
+    }
+
+    public static Integer askAccountId(){
+        String answer="";
+        Integer id=0;
+        boolean validResponse = false;
+        while(!validResponse){
+            System.out.println((char)27 + "[39m Choose an Account id");
+            answer= scanner.nextLine().trim().toLowerCase();
+            id=checkValidId(Integer.parseInt(answer));
+            validResponse=true;
+        }
+        return id;
+    }
+
 
     public static int askEmployees(){
         //Initialise number of employees to be able to access it inside the loop and return it

@@ -1,8 +1,11 @@
 package com.ironhack.CRMunit3.model;
 
 import com.ironhack.CRMunit3.enums.Industry;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -20,10 +23,12 @@ public class Account {
     private String city;
     private String country;
 
-    @OneToMany(mappedBy = "accountId")
+    @OneToMany(fetch=FetchType.EAGER, mappedBy = "account")
+    @Fetch(FetchMode.SUBSELECT)
     private List<Contact> contactList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "accountId")
+    @OneToMany(fetch=FetchType.EAGER, mappedBy = "account")
+    @Fetch(FetchMode.SUBSELECT)
     private List<Opportunity> opportunityList = new ArrayList<>();
     //This allows us to generate ids that don't repeat
 

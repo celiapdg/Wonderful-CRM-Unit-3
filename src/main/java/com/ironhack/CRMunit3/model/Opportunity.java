@@ -27,7 +27,7 @@ public class Opportunity {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    private Account accountId;
+    private Account account;
 
     public Opportunity() {
     }
@@ -42,11 +42,11 @@ public class Opportunity {
     }
 
     public Account getAccountId() {
-        return accountId;
+        return account;
     }
 
-    public void setAccountId(Account accountId) {
-        this.accountId = accountId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public void setStatus(Status status) {
@@ -87,6 +87,7 @@ public class Opportunity {
                 "\nproduct = " + product +
                 "\namount = " + quantity +
                 ", \nstatus = " + status +
+                ", \nsales rep = " + salesRep.getName() +
                 ", \n" + decisionMaker;
     }
 
@@ -98,6 +99,6 @@ public class Opportunity {
         return quantity == that.quantity &&
                product == that.product &&
                Objects.equals(decisionMaker, that.decisionMaker) &&
-               status == that.status;
+                status == that.status;
     }
 }

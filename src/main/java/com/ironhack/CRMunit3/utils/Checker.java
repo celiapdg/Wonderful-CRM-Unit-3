@@ -2,6 +2,7 @@ package com.ironhack.CRMunit3.utils;
 
 import com.ironhack.CRMunit3.enums.*;
 
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Checker {
@@ -24,6 +25,7 @@ public class Checker {
 
     public static boolean checkSalesRepId(String idRep){
         int id = Integer.parseInt(idRep);
+
 
 //        TODO comprobamos si el id está en la base de datos
 
@@ -95,6 +97,14 @@ public class Checker {
             throw new IllegalArgumentException((char)27 + "[31mQuantity must be above 0");
         }
         return true;
+    }
+
+    public static int checkValidId(Integer id){
+
+        if (id <= 0) {
+            throw new IllegalArgumentException((char)27 + "[31mQuantity must be above 0");
+        }
+        return id;
     }
 
 

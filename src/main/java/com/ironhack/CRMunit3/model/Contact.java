@@ -15,7 +15,7 @@ public class Contact {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    private Account accountId;
+    private Account account;
 
     public Contact() {
     }
@@ -50,12 +50,12 @@ public class Contact {
         return contactId;
     }
 
-    public Account getAccountId() {
-        return accountId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAccountId(Account accountId) {
-        this.accountId = accountId;
+    public void setAccountId(Account account) {
+        this.account = account;
     }
 
     @Override
