@@ -43,4 +43,25 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, Intege
 
     @Query("SELECT a.industry, COUNT(*) FROM Opportunity o JOIN Account a ON a.accountId = o.account WHERE o.status = :status GROUP BY a.industry")
     public List<Object[]> findNumberOfOpportunitiesPerIndustryWithStatus(@Param("status") Status status);
+
+    @Query(value = "SELECT CAST(AVG(oo.opps) AS double) FROM (SELECT COUNT(o.opportunity_id) AS opps FROM `account` a " +
+            "JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo", nativeQuery = true)
+    public List<Object[]> findAvgOpportunitiesByAccountId();
+
+    @Query(value = "SELECT CAST(MAX(oo.opps) AS double) FROM (SELECT COUNT(o.opportunity_id) AS opps FROM `account` a " +
+            "JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo", nativeQuery = true)
+    public List<Object[]> findMaxOpportunitiesByAccountId();
+
+    @Query(value = "SELECT CAST(MIN(oo.opps) AS double) FROM (SELECT COUNT(o.opportunity_id) AS opps FROM `account` a " +
+            "JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo", nativeQuery = true)
+    public List<Object[]> findMinOpportunitiesByAccountId();
+
+//    quantity
+    @Query("SELECT product, CAST(AVG(quantity) AS double) FROM Opportunity GROUP BY product")
+    public List<Object[]> findAvgGroupByProduct();
+    @Query("SELECT product, CAST(MAX(quantity) AS double) FROM Opportunity GROUP BY product")
+    public List<Object[]> findMaxGroupByProduct();
+    @Query("SELECT product, CAST(MIN(quantity) AS double) FROM Opportunity GROUP BY product")
+    public List<Object[]> findMinGroupByProduct();
+
 }
