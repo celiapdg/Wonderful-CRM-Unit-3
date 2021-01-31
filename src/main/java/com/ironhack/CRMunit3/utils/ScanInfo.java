@@ -1,10 +1,6 @@
 package com.ironhack.CRMunit3.utils;
 
 import com.ironhack.CRMunit3.enums.*;
-import com.ironhack.CRMunit3.model.*;
-import com.ironhack.CRMunit3.repository.*;
-import org.springframework.beans.factory.annotation.*;
-import org.springframework.stereotype.*;
 
 
 import java.util.Scanner;
@@ -116,7 +112,7 @@ public class ScanInfo {
             System.out.println((char)27 + "[39mPlease, provide a Sales Rep id");
             salesRepId = scanner.nextLine().trim();
             try {
-                validSalesRepId = checkSalesRepId(salesRepId);
+                validSalesRepId = checkValidId(salesRepId);
                 salesRep=Integer.parseInt(salesRepId);
 
             }catch (Exception e){
@@ -221,16 +217,13 @@ public class ScanInfo {
     public static Integer askAccountId(){
         String answer="";
         Integer id=0;
-        boolean validResponse = false;
-        while(!validResponse){
+        while(!checkValidId(answer)){
             System.out.println((char)27 + "[39m Choose an Account id");
             answer= scanner.nextLine().trim().toLowerCase();
-            id=checkValidId(Integer.parseInt(answer));
-            validResponse=true;
         }
+        id = Integer.parseInt(answer);
         return id;
     }
-
 
     public static int askEmployees(){
         //Initialise number of employees to be able to access it inside the loop and return it

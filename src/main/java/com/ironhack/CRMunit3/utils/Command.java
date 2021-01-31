@@ -4,24 +4,20 @@ import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
 import com.ironhack.CRMunit3.repository.*;
 
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.IOException;
+import java.io.InvalidObjectException;
 import java.util.*;
 
+import static com.ironhack.CRMunit3.utils.Checker.checkValidId;
 import static com.ironhack.CRMunit3.utils.ScanInfo.*;
 
 @Service
 public class Command {
 
-
     public static Sound errorSound = new Sound("error.wav");
     public static Sound bipSound = new Sound("bip.wav");
     public static Sound exitSound = new Sound("exit.wav");
-
 
     SalesRepRepository salesRepRepository;
     LeadRepository leadRepository;
@@ -29,7 +25,11 @@ public class Command {
     OpportunityRepository opportunityRepository;
     AccountRepository accountRepository;
 
-    public Command(SalesRepRepository salesRepRepository, LeadRepository leadRepository, ContactRepository contactRepository, OpportunityRepository opportunityRepository, AccountRepository accountRepository) {
+    public Command(SalesRepRepository salesRepRepository,
+                   LeadRepository leadRepository,
+                   ContactRepository contactRepository,
+                   OpportunityRepository opportunityRepository,
+                   AccountRepository accountRepository) {
         this.salesRepRepository = salesRepRepository;
         this.leadRepository = leadRepository;
         this.contactRepository = contactRepository;
@@ -37,8 +37,7 @@ public class Command {
         this.accountRepository = accountRepository;
     }
     //method called in main
-    public void commandReader(String userInput)
-            throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+    public void commandReader(String userInput) {
 
         //separate the words in the input
         String[] arr = userInput.split(" ");
@@ -60,7 +59,7 @@ public class Command {
                                 String email = askEmail();
                                 String company = askCompName();
                                 Integer salesRepId = askSalesRep();
-                                SalesRep salesRep=salesRepRepository.findBySalesRepId(salesRepId);
+                                SalesRep salesRep = salesRepRepository.findBySalesRepId(salesRepId);
 
                                 //this method is defined below
                                 newLead(name, phone, email, company, salesRep);
@@ -99,7 +98,6 @@ public class Command {
                             break;
                             }
                         case"y":
-
                             //go to utils ScanInfo to check how these work
                             Industry industry = askIndustry();
                             int numOfEmployees = askEmployees();
@@ -121,55 +119,21 @@ public class Command {
                     bipSound.playSound();
                     break;
                 case "show":
-                    switch (arr[1]) {
-                        //if the second word is leads enters here
-                        case "leads":
-                            //method below
-                            showLeads();
-                            break;
-                        case "opportunities":
-                            //if the second word is opportunities enters here
-                            showOpportunities();
-                            break;
-                        case "sales":
-                            //if the second word is opportunities enters here
-                            showSalesReps();
-                            break;
-                        default:
-                            //default to make sure every option is managed
-                            System.out.println((char)27 + "[31mThat is not a valid command");
-                            errorSound.playSound();
-                    }
+                    show(arr[1]);
                     break;
                 case "lookup":
-                    switch (arr[1]) {
-                        //if the second word is lead enters here
-                        case "lead":
-                            //method below
-                            lookupLead(arr[2]);
-                            break;
-
-                        //if the second word is opportunity enters here
-                        case "opportunity":
-                            //method below
-                            lookupOpportunity(arr[2]);
-                            break;
-                        default:
-                            // AGAIN default to make sure every option is managed
-                            System.out.println((char)27 + "[31mThat is not a valid command");
-                            errorSound.playSound();
+                    if (arr[1].equals("sales")) {
+                        //method below
+                        lookup(arr[1], arr[3]);
+                    }else {
+                        lookup(arr[1], arr[2]);
                     }
                     break;
 
                 case "close-lost":
-                    //method below
-                    closeLost(arr[1]);
-                    bipSound.playSound();
-                    break;
-
                 case "close-won":
                     //method below
-                    closeWon(arr[1]);
+                    closeOpportunity(arr[0],arr[1]);
                     bipSound.playSound();
                     break;
 
@@ -180,23 +144,29 @@ public class Command {
                     bipSound.closeSound();
                     errorSound.closeSound();
                     exitSound.closeSound();
+
                     break;
 
                 default:
                     //if the first word is not equal to any of the above this comes up
                     System.out.println((char)27 + "[31mThat is not a valid command");
+                    errorSound.playSound();
                 }
             }catch(NumberFormatException e){
-                System.out.println((char)27 + "[31mType a valid id");
+                System.out.println((char)27 + "[31mType a valid "+arr[1]+" id");
                 errorSound.playSound();
             }catch(NullPointerException e){
-                System.out.println((char)27 + "[31mThat id does not exist");
+                System.out.println((char)27 + "[31mThat "+arr[1]+" id does not exist");
                 errorSound.playSound();
             }catch(ArrayIndexOutOfBoundsException e){
                 System.out.println((char)27 + "[31mThat is not a valid command");
                 errorSound.playSound();
-            }
+            }catch(InvalidObjectException e){
+                System.out.println((char)27 + "[31mThat is not a valid object");
+                errorSound.playSound();
+        }
     }
+
 
     public SalesRep newSalesRep (String name){
 
@@ -213,8 +183,6 @@ public class Command {
                                 String email,
                                 String compName,
                                 SalesRep salesRep){
-
-
 
         Lead lead = new Lead(name, phone, email, compName, salesRep);
         leadRepository.save(lead);
@@ -257,94 +225,115 @@ public class Command {
         leadRepository.delete(lead);
     }
 
-
-    public  void showSalesReps (){
-
-        List<SalesRep> salesRepList = salesRepRepository.findAll();
-//        If there are no leads left
-        if (salesRepList.isEmpty()){
-//            Out prints a message
-            System.out.println((char)27 + "[31mYou don't have leads in this moment");
-        }else {
-            for (SalesRep salesRep : salesRepList) {
-                System.out.println(salesRep);
-                System.out.println("");
+    public void show(String objectType) throws InvalidObjectException {
+        switch (objectType) {
+            case "lead", "leads" -> {
+                List<Lead> leadList = leadRepository.findAll();
+                if (leadList.size() > 0) {
+                    for (Lead lead : leadList) {
+                        System.out.println(lead + "\n");
+                    }
+                    bipSound.playSound();
+                } else {
+                    System.out.println((char) 27 + "[31mThere are no leads at the moment");
+                    errorSound.playSound();
+                }
             }
+            case "opportunity", "opportunities" -> {
+                List<Opportunity> opportunityList = opportunityRepository.findAll();
+                if (opportunityList.size() > 0) {
+                    for (Opportunity opportunity : opportunityList) {
+                        System.out.println(opportunity + "\n");
+                    }
+                    bipSound.playSound();
+                } else {
+                    System.out.println((char) 27 + "[31mThere are no opportunities at the moment");
+                    errorSound.playSound();
+                }
+            }
+            case "contact", "contacts" -> {
+                List<Contact> contactList = contactRepository.findAll();
+                if (contactList.size() > 0) {
+                    for (Contact contact : contactList) {
+                        System.out.println(contact + "\n");
+                    }
+                    bipSound.playSound();
+                } else {
+                    System.out.println((char) 27 + "[31mThere are no contacts at the moment");
+                    errorSound.playSound();
+                }
+            }
+            case "account", "accounts" -> {
+                List<Account> accountList = accountRepository.findAll();
+                if (accountList.size() > 0) {
+                    for (Account account : accountList) {
+                        System.out.println(account + "\n");
+                    }
+                    bipSound.playSound();
+                } else {
+                    System.out.println((char) 27 + "[31mThere are no accounts at the moment");
+                    errorSound.playSound();
+                }
+            }
+            case "sales", "salesrep", "salesreps" -> {
+                List<SalesRep> salesRepList = salesRepRepository.findAll();
+                if (salesRepList.size() > 0) {
+                    for (SalesRep salesRep : salesRepList) {
+                        System.out.println(salesRep + "\n");
+                    }
+                    bipSound.playSound();
+                } else {
+                    System.out.println((char) 27 + "[31mThere are no sales reps at the moment");
+                    errorSound.playSound();
+                }
+            }
+            default -> throw new InvalidObjectException((char) 27 + "[31mInvalid object type");
         }
     }
 
-    public  void showLeads (){
 
-        List<Lead> leadList = leadRepository.findAll();
-//        If there are no leads left
-        if (leadList.isEmpty()){
-//            Out prints a message
-            System.out.println((char)27 + "[31mYou don't have leads in this moment");
-        }else {
-            for (Lead lead : leadList) {
-                System.out.println(lead);
-                System.out.println("");
-            }
-        }
-    }
-
-
-    public  void showOpportunities (){
-
-        List<Opportunity> opportunityList = opportunityRepository.findAll();
-        //If there are no opportunities yet
-        if (opportunityList.isEmpty()){
-//            Out prints a message
-            System.out.println((char)27 + "[31mYou haven't created any opportunity yet");
-        }else {
-            for (Opportunity opportunity : opportunityList) {
-                System.out.println(opportunity);
-                System.out.println("");
-            }
-        }
-    }
-
-    // Takes the lead id and the lead List and shows its info
-    public  void lookupLead (String id){
-        //checking for invalid id
-        Integer leadId = Integer.parseInt(id);
-        if (leadId < 0){
+    public Object lookup(String objectType, String inputId) throws InvalidObjectException {
+        Integer id = Integer.parseInt(inputId);
+        if (id < 0){
             throw new NumberFormatException();
         }
 
-
-        Lead lead = leadRepository.findByLeadId(leadId);
-        //checking for null lead
-        if (lead == null){
-            throw new NullPointerException();
+        switch (objectType) {
+            case "salesrep", "sales" -> {
+                SalesRep salesRep = salesRepRepository.findBySalesRepId(id);
+                System.out.println(salesRep.toString());
+                return salesRep;
+            }
+            case "lead" -> {
+                Lead lead = leadRepository.findByLeadId(id);
+                System.out.println(lead.toString()); // id lead doesn't exist, it will throll NullPointerException
+                return lead;
+            }
+            case "opportunity" -> {
+                Opportunity opportunity = opportunityRepository.findByOpportunityId(id);
+                System.out.println(opportunity.toString());
+                return opportunity;
+            }
+            case "contact" -> {
+                Contact contact = contactRepository.findByContactId(id);
+                System.out.println(contact.toString());
+                return contact;
+            }
+            case "account" -> {
+                Account account = accountRepository.findByAccountId(id);
+                System.out.println(account.toString());
+                return account;
+            }
+            default -> throw new InvalidObjectException((char) 27 + "[31mInvalid object type");
         }
-        System.out.println(lead);
     }
 
-    // Takes the lead id and the opportunity List and shows its info
-    public  void lookupOpportunity (String id){
-        //checking for invalid id
-        Integer opportunityId = Integer.parseInt(id);
-        if (opportunityId < 0){
-            throw new NumberFormatException();
-        }
-        Opportunity opportunity = opportunityRepository.findByOpportunityId(opportunityId);
-
-        //checking for null opportunity
-        if (opportunity == null){
-            throw new NullPointerException();
-        }
-        System.out.println(opportunity);
-    }
 
     //Change opportunity status, receives opportunity id and List
-    public  void closeLost (String id){
+    public void closeOpportunity(String closeType, String id){
         //checking for invalid id
+        checkValidId(id);
         Integer opportunityId = Integer.parseInt(id);
-        if (opportunityId < 0){
-            throw new NumberFormatException();
-        }
-
         Opportunity opportunity = opportunityRepository.findByOpportunityId(opportunityId);
 
         //checking for null opportunity
@@ -352,42 +341,26 @@ public class Command {
             throw new NullPointerException();
         }
 
-        //status will be changed if it's not already set to closed-lost (that makes sense, right?)
-        if (opportunity.getStatus() != Status.CLOSED_LOST){
-            opportunity.setStatus(Status.CLOSED_LOST);
-            opportunity.toString();
-            System.out.println((char)27 + "[32mOpportunity closed-lost");
-            opportunityRepository.save(opportunity);
-        } else {
+        //status will be changed if it's not already set to closed (that makes sense, right?)
+        if (opportunity.getStatus() == Status.CLOSED_LOST){
             System.out.println((char)27 + "[39mOpportunity was already closed-lost");
-        }
-
-    }
-
-    //Change opportunity status, receives opportunity id and List
-    public  void closeWon (String id){
-
-        //checking for invalid id
-        Integer opportunityId = Integer.parseInt(id);
-        if (opportunityId < 0){
-            throw new NumberFormatException();
-        }
-
-        Opportunity opportunity = opportunityRepository.findByOpportunityId(opportunityId);
-
-        //checking for null opportunity
-        if (opportunity == null){
-            throw new NullPointerException();
-        }
-
-        //status will be changed if it's not already set to closed-won (that makes sense, right?)
-        if (opportunity.getStatus() != Status.CLOSED_WON){
-            opportunity.setStatus(Status.CLOSED_WON);
-            opportunity.toString();
-            System.out.println((char)27 + "[32mOpportunity closed-won");
-            opportunityRepository.save(opportunity);
-        } else {
+        }else if (opportunity.getStatus() == Status.CLOSED_WON){
             System.out.println((char)27 + "[39mOpportunity was already closed-won");
+        }else{
+            switch (closeType) {
+                case "close-won" -> {
+                    opportunity.setStatus(Status.CLOSED_WON);
+                    System.out.println(opportunity);
+                    System.out.println((char) 27 + "[32mOpportunity closed-won");
+                    opportunityRepository.save(opportunity);
+                }
+                case "close-lost" -> {
+                    opportunity.setStatus(Status.CLOSED_LOST);
+                    System.out.println(opportunity);
+                    System.out.println((char) 27 + "[32mOpportunity closed-lost");
+                    opportunityRepository.save(opportunity);
+                }
+            }
         }
     }
 
