@@ -4,12 +4,12 @@ import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
 import com.ironhack.CRMunit3.repository.*;
 
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.*;
 
 import java.io.InvalidObjectException;
 import java.util.*;
 
+import static com.ironhack.CRMunit3.utils.Colors.*;
 import static com.ironhack.CRMunit3.utils.ScanInfo.*;
 
 @Service
@@ -64,7 +64,7 @@ public class Command {
                                     Integer salesRepId = askSalesRep();
                                     salesRep = salesRepRepository.findBySalesRepId(salesRepId);
                                     if(salesRep == null) {
-                                        System.out.println((char)27 + "[31mThat sales rep does not exists");
+                                        System.out.println(ANSI_RED + "That sales rep does not exists");
                                     }
                                 }
 
@@ -72,6 +72,9 @@ public class Command {
                                 newLead(name, phone, email, company, salesRep);
                                 bipSound.playSound();
                             break;
+                        default:
+                            System.out.println(ANSI_RED + "That is not a valid command");
+                            errorSound.playSound();
                     }
                     break;
                 case "convert":
@@ -95,7 +98,7 @@ public class Command {
                     switch (answer){
                         case"n":
                             if (accountRepository.findAll().isEmpty()){
-                                System.out.println((char)27 + "[31mThere is no account created yet, you must create one");
+                                System.out.println(ANSI_RED + "There is no account created yet, you must create one");
                             }else {
                                 Integer accountId = askAccountId();
                                 account = accountRepository.findByAccountId(accountId);
@@ -122,7 +125,7 @@ public class Command {
                     contactRepository.save(contact);
 
                     removeLead(leadRepository.findByLeadId(id));
-                    System.out.println((char)27 + "[32mNew opportunity created!!\n"+opportunity);
+                    System.out.println(ANSI_GREEN + "New opportunity created!!\n"+opportunity);
                     bipSound.playSound();
                     break;
                 case "show":
@@ -150,7 +153,7 @@ public class Command {
 
                 case "exit":
                     //ONLY COMMAND THAT EXITS THE APPLICATION
-                    System.out.println((char)27 + "[46m" + (char)27 + "[30mThank you for using the best CRM in the world");
+                    System.out.println(ANSI_CYAN_BACKGROUND + ANSI_BLACK + "Thank you for using the best CRM in the world");
                     exitSound.playSound();
                     bipSound.closeSound();
                     errorSound.closeSound();
@@ -159,20 +162,20 @@ public class Command {
 
                 default:
                     //if the first word is not equal to any of the above this comes up
-                    System.out.println((char)27 + "[31mThat is not a valid command");
+                    System.out.println(ANSI_RED + "That is not a valid command");
                     errorSound.playSound();
                 }
             }catch(NumberFormatException e){
-                System.out.println((char)27 + "[31mType a valid "+arr[1]+" id");
+                System.out.println(ANSI_RED + "Type a valid "+arr[1]+" id");
                 errorSound.playSound();
             }catch(NullPointerException e){
-                System.out.println((char)27 + "[31mThat "+arr[1]+" id does not exist");
+                System.out.println(ANSI_RED + "That "+arr[1]+" id does not exist");
                 errorSound.playSound();
             }catch(ArrayIndexOutOfBoundsException e){
-                System.out.println((char)27 + "[31mThat is not a valid command");
+                System.out.println(ANSI_RED + "That is not a valid command");
                 errorSound.playSound();
             }catch(InvalidObjectException e){
-                System.out.println((char)27 + "[31mThat is not a valid object");
+                System.out.println(ANSI_RED + "That is not a valid object");
                 errorSound.playSound();
         }
     }
@@ -182,7 +185,7 @@ public class Command {
         SalesRep salesRep=new SalesRep(name);
 
         salesRepRepository.save(salesRep);
-        System.out.println((char)27 + "[32mNew Sales Rep created!!\n"+salesRep);
+        System.out.println(ANSI_GREEN + "New Sales Rep created!!\n"+salesRep);
         return salesRep;
     }
 
@@ -195,7 +198,7 @@ public class Command {
 
         Lead lead = new Lead(name, phone, email, compName, salesRep);
         leadRepository.save(lead);
-        System.out.println((char)27 + "[32mNew lead created!!\n"+lead);
+        System.out.println(ANSI_GREEN + "New lead created!!\n"+lead);
         return lead;
 
     }
@@ -225,7 +228,7 @@ public class Command {
                                         Contact contact,
                                         Opportunity opportunity){
         Account account = accountRepository.save(new Account(industry, numOfEmployees, city, country, contact,opportunity)) ;
-        System.out.println((char)27 + "[32mAccount created!!\n");
+        System.out.println(ANSI_GREEN + "Account created!!\n");
         return account;
     }
 
@@ -373,74 +376,75 @@ public class Command {
     }
 
     public void reportOptions(String[] arr) throws InvalidObjectException {
+        List<Object[]> resultList;
         switch (arr[3]){
             case "salesrep":
+            case "sales":
                 switch (arr[1]){
                     case "lead":
-                        List<Object[]> leadBySalesRep = leadRepository.countBySalesRep();
-                        for (Object[] o: leadBySalesRep) {
-                            System.out.println("SalesRep " + o[0] + " has created " + o[1] + " leads.");
-                        }
+                        resultList = leadRepository.countBySalesRep();
+                        System.out.println(ANSI_BLUE + "Leads created by SalesRep:");
                         break;
                     case "opportunity":
-                        List<Object[]> opBySalesRep = opportunityRepository.findNumberOfOpportunitiesPerSalesRep();
-                        for (Object[] o: opBySalesRep) {
-                            System.out.println("SalesRep " + o[0] + " has created " + o[1] + " opportunities.");
-                        }
+                        resultList = opportunityRepository.findNumberOfOpportunitiesPerSalesRep();
+                        System.out.println(ANSI_BLUE + "Opportunities created by sales rep");
                         break;
                     case "closed-lost":
-                        List<Object[]> opByStatusCL = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.CLOSED_LOST);
-                        for (Object[] o: opByStatusCL) {
-                            System.out.println("SalesRep " + o[0] + " has lost " + o[1] + " opportunities.");
-                        }
+                        resultList = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.CLOSED_LOST);
+                        System.out.println(ANSI_BLUE + "Opportunities CLOSED-LOST by sales rep");
                         break;
                     case "closed-won":
-                        List<Object[]> opByStatusCW = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.CLOSED_WON);
-                        for (Object[] o: opByStatusCW) {
-                            System.out.println("SalesRep " + o[0] + " has won " + o[1] + " opportunities.");
-                        }
+                        resultList = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.CLOSED_WON);
+                        System.out.println(ANSI_BLUE + "Opportunities CLOSED-WON by sales rep");
                         break;
                     case "open":
-                        List<Object[]> opByStatusO = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.OPEN);
-                        for (Object[] o: opByStatusO) {
-                            System.out.println("SalesRep " + o[0] + " has " + o[1] + " opportunities open.");
-                        }
+                        resultList = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.OPEN);
+                        System.out.println(ANSI_BLUE + "Opportunities currently OPEN by sales rep");
                         break;
                     default:
-                        throw new InvalidObjectException("Invalid object type");
+                        throw new InvalidObjectException(ANSI_RED + "Invalid object type");
                 }
+                if (resultList.size()>0){
+                    for (Object[] o: resultList) {
+                        System.out.println("SalesRep " + o[0] + ": " + o[1]);
+                    }
+                }else{
+                    System.out.println(ANSI_RED + "No results");
+                }
+
                 break;
             case "product":
                 switch (arr[1]){
                     case "opportunity":
-                        List<Object[]> opByProduct = opportunityRepository.findNumberOfOpportunitiesPerProduct();
-                        for (Object[] o: opByProduct) {
-                            System.out.println("The product " + o[0] + " is ordered in " + o[1] + " opportunities.");
-                        }
+                        resultList = opportunityRepository.findNumberOfOpportunitiesPerProduct();
+                        System.out.println(ANSI_BLUE + "Number of products ordered by each opportunity");
                         break;
                     case "closed-lost":
-                        List<Object[]> opByProductCL = opportunityRepository.findNumberOfOpportunitiesPerProductWithStatus(Status.CLOSED_LOST);
-                        for (Object[] o: opByProductCL) {
-                            System.out.println("The product " + o[0] + " is ordered in " + o[1] + " lost opportunities.");
-                        }
+                        resultList = opportunityRepository.findNumberOfOpportunitiesPerProductWithStatus(Status.CLOSED_LOST);
+                        System.out.println(ANSI_BLUE + "Number of products ordered by each lost opportunity");
                         break;
                     case "closed-won":
-                        List<Object[]> opByProductCW = opportunityRepository.findNumberOfOpportunitiesPerProductWithStatus(Status.CLOSED_WON);
-                        for (Object[] o: opByProductCW) {
-                            System.out.println("The product " + o[0] + " is ordered in " + o[1] + " won opportunities.");
-                        }
+                        resultList = opportunityRepository.findNumberOfOpportunitiesPerProductWithStatus(Status.CLOSED_WON);
+                        System.out.println(ANSI_BLUE + "Number of products ordered by each won opportunity");
                         break;
                     case "open":
-                        List<Object[]> opByProductO = opportunityRepository.findNumberOfOpportunitiesPerProductWithStatus(Status.OPEN);
-                        for (Object[] o: opByProductO) {
-                            System.out.println("The product " + o[0] + " is ordered in " + o[1] + " open opportunities.");
-                        }
+                        resultList = opportunityRepository.findNumberOfOpportunitiesPerProductWithStatus(Status.OPEN);
+                        System.out.println(ANSI_BLUE + "Number of products ordered by each open opportunity");
                         break;
                     default:
-                        throw new InvalidObjectException("Invalid object type");
+                        throw new InvalidObjectException(ANSI_RED + "Invalid object type");
+                }
+                if (resultList.size()>0){
+                    for (Object[] o: resultList) {
+                        System.out.println("Product: " + o[0] + ", opportunities: " + o[1]);
+                    }
+                }else{
+                    System.out.println(ANSI_RED + "No results");
                 }
                 break;
             case "city":
+                // todo: sacar el bucle de todos los casos y ponerlo al final del case city.
+                // todo: añadir mensaje en cada caso para indicar el resultado de la query
                 switch (arr[1]){
                     case "opportunity":
                         List<Object[]> opByCity = opportunityRepository.findNumberOfOpportunitiesPerCity();
@@ -471,6 +475,8 @@ public class Command {
                 }
                 break;
             case "country":
+                // todo: sacar el bucle de todos los casos y ponerlo al final del case country.
+                // todo: añadir mensaje en cada caso para indicar el resultado de la query
                 switch (arr[1]){
                     case "opportunity":
                         List<Object[]> opByCountry = opportunityRepository.findNumberOfOpportunitiesPerCountry();
@@ -501,6 +507,8 @@ public class Command {
                 }
                 break;
             case "industry":
+                // todo: sacar el bucle de todos los casos y ponerlo al final del case industry.
+                // todo: añadir mensaje en cada caso para indicar el resultado de la query
                 switch (arr[1]){
                     case "opportunity":
                         List<Object[]> opByIndustry = opportunityRepository.findNumberOfOpportunitiesPerIndustry();
