@@ -104,23 +104,22 @@ public class ScanInfo {
     }
 
     public static Integer askSalesRep(){
-        boolean validSalesRepId = false;
         String salesRepId ="";
-        Integer salesRep = 0;
-
-        while (!validSalesRepId){
-            System.out.println((char)27 + "[39mPlease, provide a Sales Rep id");
-            salesRepId = scanner.nextLine().trim();
+        Integer id = 0;
+        Boolean validId = false;
+        while (!validId){
             try {
-                validSalesRepId = checkValidId(salesRepId);
-                salesRep=Integer.parseInt(salesRepId);
-
-            }catch (Exception e){
-//                TODO poner excepciones
+                System.out.println((char)27 + "[39mPlease, provide a Sales Rep id");
+                salesRepId = scanner.nextLine().trim();
+                id = checkValidId(salesRepId);
+                validId = true;
+            }catch (NumberFormatException e) {
+                System.out.println((char) 27 + "[31mType a valid number format");
+            }catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
             }
         }
-
-        return salesRep;
+        return id;
     }
 
 
@@ -214,16 +213,26 @@ public class ScanInfo {
         return answer;
     }
 
+
     public static Integer askAccountId(){
-        String answer="";
-        Integer id=0;
-        while(!checkValidId(answer)){
-            System.out.println((char)27 + "[39m Choose an Account id");
-            answer= scanner.nextLine().trim().toLowerCase();
+        String accountId = "";
+        Integer id = 0;
+        Boolean validId = false;
+        while (!validId){
+            try {
+                System.out.println((char)27 + "[39mPlease, provide an Account id");
+                accountId = scanner.nextLine().trim();
+                id = checkValidId(accountId);
+                validId = true;
+            }catch (NumberFormatException e) {
+                System.out.println((char) 27 + "[31mType a valid number format");
+            }catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
         }
-        id = Integer.parseInt(answer);
         return id;
     }
+
 
     public static int askEmployees(){
         //Initialise number of employees to be able to access it inside the loop and return it

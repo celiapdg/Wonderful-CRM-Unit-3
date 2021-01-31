@@ -80,12 +80,13 @@ public class Checker {
         return true;
     }
 
-    public static boolean checkValidId(String strId){
+
+    public static Integer checkValidId(String strId){
         Integer id = Integer.parseInt(strId);
         if (id <= 0) {
             throw new IllegalArgumentException((char)27 + "[31mQuantity must be above 0");
         }
-        return true;
+        return id;
     }
 
 
