@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,12 +93,23 @@ class OpportunityRepositoryTest {
         assertEquals("Albacete",result.get(0)[0]);
     }
 
+
+    @Test
+    void findNumberOfOpportunitiesPerCityWithStatus() {
+    }
+
     @Test
     void findNumberOfOpportunitiesPerCountry() {
+        List<Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerCountry();
+        assertEquals(1L, result.get(0)[1]);
+        assertEquals("ESSSSPAÑA", result.get(0)[0]);
     }
 
     @Test
     void findNumberOfOpportunitiesPerCountryWithStatus() {
+        List<Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerCountryWithStatus(Status.OPEN);
+        assertEquals(1L, result.get(0)[1]);
+        assertEquals("ESSSSPAÑA", result.get(0)[0]);
     }
 
     @Test
@@ -106,5 +118,45 @@ class OpportunityRepositoryTest {
 
     @Test
     void findNumberOfOpportunitiesPerIndustryWithStatus() {
+    }
+
+
+    @Test
+    void findAvgOpportunitiesByAccountId() {
+        List<Object[]> result = opportunityRepository.findAvgOpportunitiesByAccountId();
+        assertEquals((double) 1, result.get(0)[0]);
+    }
+
+    @Test
+    void findMaxOpportunitiesByAccountId() {
+        List<Object[]> result = opportunityRepository.findMaxOpportunitiesByAccountId();
+        assertEquals((double) 1, result.get(0)[0]);
+    }
+
+    @Test
+    void findMinOpportunitiesByAccountId() {
+        List<Object[]> result = opportunityRepository.findMinOpportunitiesByAccountId();
+        assertEquals((double) 1, result.get(0)[0]);
+    }
+
+    @Test
+    void findAvgGroupByProduct() {
+        List<Object[]> result = opportunityRepository.findAvgGroupByProduct();
+        assertEquals(3, result.size());
+        assertEquals((double) 40, result.get(0)[1]);
+    }
+
+    @Test
+    void findMaxGroupByProduct() {
+        List<Object[]> result = opportunityRepository.findMaxGroupByProduct();
+        assertEquals(3, result.size());
+        assertEquals((double) 40, result.get(0)[1]);
+    }
+
+    @Test
+    void findMinGroupByProduct() {
+        List<Object[]> result = opportunityRepository.findMinGroupByProduct();
+        assertEquals(3, result.size());
+        assertEquals((double) 40, result.get(0)[1]);
     }
 }
