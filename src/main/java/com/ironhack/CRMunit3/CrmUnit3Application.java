@@ -73,8 +73,6 @@ public class CrmUnit3Application implements CommandLineRunner {
 //			command.commandReader(userInput);
 //		}
 
-
-
 	}
 	public static void showMainMenu(){
 		System.out.println((char)27 + "[49m" + (char)27 + "[39mWhat do you want to do?:");

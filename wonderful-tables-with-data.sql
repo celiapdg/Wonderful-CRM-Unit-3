@@ -75,5 +75,46 @@ INSERT INTO contact (`name`, email, company_name,phone_number, account_id) VALUE
 
 INSERT INTO opportunity(product, quantity, contact_id, `status`, sales_rep_id, account_id) VALUES
 ('BOX', 40, 1, 'OPEN', 1, 1),
-('FLATBED', 23, 2, 'CLOSE-WON', 2, 2),
+('FLATBED', 23, 2, 'CLOSE-WON', 2, 3),
 ('HYBRID', 77, 3, 'CLOSE-LOST', 1, 3);
+
+-- The median number of Opportunities associated with an Account can be displayed by typing "Median Opps per Account"
+SELECT avg(oo.opps) FROM
+(SELECT COUNT(o.opportunity_id) AS opps 
+FROM `account` a
+JOIN opportunity o ON a.account_id = o.account_id 
+GROUP BY a.account_id) AS oo;
+
+SELECT MAX(oo.opps) FROM
+(SELECT COUNT(o.opportunity_id) AS opps 
+FROM `account` a
+JOIN opportunity o ON a.account_id = o.account_id 
+GROUP BY a.account_id) AS oo;
+
+SELECT MIN(oo.opps) FROM
+(SELECT COUNT(o.opportunity_id) AS opps 
+FROM `account` a
+JOIN opportunity o ON a.account_id = o.account_id 
+GROUP BY a.account_id) AS oo;
+
+SELECT account_id, COUNT(*) FROM opportunity GROUP BY account_id LIMIT COUNT;
+-- SELECT AVG(dd.account_id) AS median_count FROM (SELECT d.account_id @rownum := @rownum + 1 as `row_number`, @total_rows:=@rownum
+  --  FROM opportunity d, (SELECT @rownum:=0) r
+  -- WHERE d.account_id is NOT NULL
+  -- put some where clause here
+  -- ORDER BY d.account_id
+-- ) as dd
+-- WHERE dd.row_number IN ( FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2) );
+
+
+SET @rowindex := -1;
+SELECT
+   AVG(e.views) as Median 
+FROM
+   (SELECT @rowindex:=@rowindex + 1 AS rowindex,
+           entry.views AS views
+    FROM entry
+    ORDER BY entry.views) AS e
+WHERE
+e.rowindex IN (FLOOR(@rowindex / 2), CEIL(@rowindex / 2));
+

@@ -1,15 +1,17 @@
-//package com.ironhack.CRMunit3.utils;
-//
-//
-//import com.ironhack.CRMunit3.model.*;
-//import com.ironhack.CRMunit3.enums.*;
-//import org.junit.jupiter.api.*;
-//
-//import java.util.*;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//class CommandTest {
+package com.ironhack.CRMunit3.utils;
+
+
+import com.ironhack.CRMunit3.model.*;
+import com.ironhack.CRMunit3.enums.*;
+import org.junit.jupiter.api.*;
+import org.springframework.boot.test.context.*;
+
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+class CommandTest {
 //
 //    Lead testValid;
 //    Lead testInvalid;
@@ -166,4 +168,8 @@
 //    void lookupOpportunity_nullLead_NullPointerException() {
 //        assertThrows(NullPointerException.class, () -> Command.lookupOpportunity("345", opportunityListTest));
 //    }
-//}
+
+    @Test
+    void reportOptions() {
+    }
+}
