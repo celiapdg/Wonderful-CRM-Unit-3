@@ -43,19 +43,19 @@ public class CrmUnit3Application implements CommandLineRunner {
 		String userInput="";
 
 		//This loops runs until the user chooses the exit option
-		while (!userInput.equals("exit")){
-
-			showMainMenu();
-			// Get input from the user organized
-			userInput = myScanner.nextLine()
-					.toLowerCase()
-					.trim();
-
-			//Go to utils Command to the this method functionality
-			Command command=new Command(salesRepRepository,  leadRepository, contactRepository,opportunityRepository, accountRepository);
-			command.commandReader(userInput);
-		}
-		System.exit(0);
+//		while (!userInput.equals("exit")){
+//
+//			showMainMenu();
+//			// Get input from the user organized
+//			userInput = myScanner.nextLine()
+//					.toLowerCase()
+//					.trim();
+//
+//			//Go to utils Command to the this method functionality
+//			Command command=new Command(salesRepRepository,  leadRepository, contactRepository,opportunityRepository, accountRepository);
+//			command.commandReader(userInput);
+//		}
+//		System.exit(0);
 	}
 	public static void showMainMenu(){
 		System.out.println((char)27 + "[49m" + (char)27 + "[39mWhat do you want to do?:");

@@ -64,11 +64,9 @@ public class SalesRep {
 
     @Override
     public String toString() {
-        return "SalesRep{" +
-                "salesRepId=" + salesRepId +
-                ", name='" + name + '\'' +
-                ", opportunities=" + opportunities +
-                ", leads=" + leads +
-                '}';
+        return "SalesRep: " +salesRepId +
+                "\nname='" + name +
+                "\nopportunities=" + opportunities +
+                "\nleads=" + leads;
     }
 }
