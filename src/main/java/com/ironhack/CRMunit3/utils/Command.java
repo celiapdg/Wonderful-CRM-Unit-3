@@ -58,8 +58,15 @@ public class Command {
                                 String phone = askPhone();
                                 String email = askEmail();
                                 String company = askCompName();
-                                Integer salesRepId = askSalesRep();
-                                SalesRep salesRep = salesRepRepository.findBySalesRepId(salesRepId);
+
+                                SalesRep salesRep = null;
+                                while (salesRep == null){
+                                    Integer salesRepId = askSalesRep();
+                                    salesRep = salesRepRepository.findBySalesRepId(salesRepId);
+                                    if(salesRep == null) {
+                                        System.out.println((char)27 + "[31mThat sales rep does not exists");
+                                    }
+                                }
 
                                 //this method is defined below
                                 newLead(name, phone, email, company, salesRep);
@@ -90,7 +97,7 @@ public class Command {
                             if (accountRepository.findAll().isEmpty()){
                                 System.out.println((char)27 + "[31mThere is no account created yet, you must create one");
                             }else {
-                                Integer accountId=askAccountId();
+                                Integer accountId = askAccountId();
                                 account = accountRepository.findByAccountId(accountId);
                                 account.getOpportunityList().add(opportunity);
                                 account.getContactList().add(contact);
