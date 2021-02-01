@@ -1,4 +1,5 @@
 package com.ironhack.CRMunit3;
+import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.repository.*;
 import com.ironhack.CRMunit3.utils.*;
 import org.springframework.beans.factory.annotation.*;
@@ -64,6 +65,7 @@ public class CrmUnit3Application implements CommandLineRunner {
 		System.out.println("- close-lost " + ANSI_BOLD + "\\opportunityId\\" + ANSI_RESET);
 		System.out.println("- close-won " + ANSI_BOLD + "\\opportunityId\\" + ANSI_RESET);
 		System.out.println("- report " + ANSI_BOLD + "\\object\\" + ANSI_RESET + " by " + ANSI_BOLD + "\\attribute\\" + ANSI_RESET);
+		System.out.println("- statistics");
 		System.out.println("- exit");
 	}
 }

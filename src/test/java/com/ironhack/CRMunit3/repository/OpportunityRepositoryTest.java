@@ -140,39 +140,39 @@ class OpportunityRepositoryTest {
 
     @Test
     void findAvgOpportunitiesByAccountId() {
-        List<Object[]> result = opportunityRepository.findAvgOpportunitiesByAccountId();
-        assertEquals((double) 1, result.get(0)[0]);
+        Object[] result = opportunityRepository.findAvgOpportunitiesByAccountId();
+        assertEquals((double) 1, result[0]);
     }
 
     @Test
     void findMaxOpportunitiesByAccountId() {
-        List<Object[]> result = opportunityRepository.findMaxOpportunitiesByAccountId();
-        assertEquals((double) 1, result.get(0)[0]);
+        Object[] result = opportunityRepository.findMaxOpportunitiesByAccountId();
+        assertEquals((double) 1, result[0]);
     }
 
     @Test
     void findMinOpportunitiesByAccountId() {
-        List<Object[]> result = opportunityRepository.findMinOpportunitiesByAccountId();
-        assertEquals((double) 1, result.get(0)[0]);
+        Object[] result = opportunityRepository.findMinOpportunitiesByAccountId();
+        assertEquals((double) 1, result[0]);
     }
 
     @Test
     void findAvgGroupByProduct() {
-        List<Object[]> result = opportunityRepository.findAvgGroupByProduct();
+        List<Object[]> result = opportunityRepository.findAvgQuantityGroupByProduct();
         assertEquals(3, result.size());
         assertEquals((double) 40, result.get(0)[1]);
     }
 
     @Test
     void findMaxGroupByProduct() {
-        List<Object[]> result = opportunityRepository.findMaxGroupByProduct();
+        List<Object[]> result = opportunityRepository.findMaxQuantityGroupByProduct();
         assertEquals(3, result.size());
         assertEquals((double) 40, result.get(0)[1]);
     }
 
     @Test
     void findMinGroupByProduct() {
-        List<Object[]> result = opportunityRepository.findMinGroupByProduct();
+        List<Object[]> result = opportunityRepository.findMinQuantityGroupByProduct();
         assertEquals(3, result.size());
         assertEquals((double) 40, result.get(0)[1]);
     }

@@ -4,13 +4,15 @@ import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
 import com.ironhack.CRMunit3.repository.*;
 
+import org.springframework.stereotype.*;
+
 import java.io.InvalidObjectException;
 import java.util.*;
 
 import static com.ironhack.CRMunit3.utils.Colors.*;
 import static com.ironhack.CRMunit3.utils.ScanInfo.*;
 
-
+@Service
 public class Command {
 
     public static Sound errorSound = new Sound("error.wav");
@@ -103,9 +105,6 @@ public class Command {
                                 account.getOpportunityList().add(opportunity);
                                 account.getContactList().add(contact);
                                 accountRepository.save(account);
-//                                SalesRep salesRep = opportunity.getSalesRep();
-//                                salesRep.addOpportunity(opportunity);
-//                                salesRepRepository.save(salesRep);
                             break;
                             }
                         case"y":
@@ -150,6 +149,10 @@ public class Command {
 
                 case "report":
                     reportOptions(arr);
+                    break;
+
+                case "statistics":
+                    statistics();
                     break;
 
                 case "exit":
@@ -543,5 +546,123 @@ public class Command {
                 throw new InvalidObjectException("Invalid object type");
         }
     }
+
+    public void statistics()throws InvalidObjectException{
+
+        System.out.println(ANSI_BLUE + "Choose between Max, Min, Median and Mean \nfrom EmployeeCount, Quantity and Opps per account");
+        Scanner scanner= new Scanner(System.in);
+        String response=scanner.nextLine().toLowerCase().trim();
+        String[] arr = response.split(" ");
+
+        switch (arr[0]){
+
+            case "min":
+                switch (arr[1]){
+                    case "employeecount":
+                        Object[] employeeCount= accountRepository.findMinEmployeeCount();
+                        System.out.println("The minimun employee count is " + employeeCount[0]);
+
+                        break;
+                    case"quantity":
+                        List <Object[]> products=opportunityRepository.findMinQuantityGroupByProduct();
+                        for (Object[] o: products) {
+                            System.out.println("The minimun order of " + o[0] + " is "+o[1]);
+                        }
+
+                        break;
+                    case "opps":
+                        Object[] oppos= opportunityRepository.findMinOpportunitiesByAccountId();
+                        System.out.println("The minimun number of opportunities is " + oppos[0]);
+                        break;
+                    default:
+                        throw new InvalidObjectException("Invalid object type");
+                }
+               break;
+            case "max":
+                switch (arr[1]){
+                    case "employeecount":
+                        Object[] employeeCount= accountRepository.findMaxEmployeeCount();
+                        System.out.println("The maximum employee count is " + employeeCount[0]);
+                        break;
+                    case"quantity":
+                        List <Object[]> products=opportunityRepository.findMaxQuantityGroupByProduct();
+                        for (Object[] o: products) {
+                            System.out.println("The maximum order of " + o[0] + " is "+o[1]);
+                        }
+                        break;
+                    case "opps":
+                        Object[] oppos= opportunityRepository.findMaxOpportunitiesByAccountId();
+                        System.out.println("The maximum number of opportunities is " + oppos[0]);
+                        break;
+                    default:
+                        throw new InvalidObjectException("Invalid object type");
+                }
+                break;
+            case "median":
+                switch (arr[1]){
+                    case "employeecount":
+                        List<Object[]> employeeCount= accountRepository.orderEmployeeCount();
+                        if (employeeCount.size()%2==0){
+                            Integer first =(Integer) employeeCount.get((employeeCount.size()/2)-1)[0];
+                            Integer second =(Integer) employeeCount.get(employeeCount.size()/2)[0];
+                            System.out.println("The median of employee count is: "+(first+second)/2.0);
+
+                        }else{
+                            Integer index=(employeeCount.size()-1)/2;
+                            System.out.println("The median of employee count is: "+employeeCount.get(index)[0]);
+                        }
+
+                        break;
+                    case"quantity":
+                        Product[] products={Product.BOX, Product.HYBRID, Product.FLATBED};
+                        for (Product productType: products) {
+                            List <Object[]> quantities=opportunityRepository.findOrderedQuantity(productType);
+                            if (quantities.size()%2==0){
+                                Integer first =(Integer) quantities.get((quantities.size()/2)-1)[0];
+                                Integer second =(Integer) quantities.get(quantities.size()/2)[0];
+                                System.out.println("The median of "+productType+" is: "+(first+second)/2.0);
+
+                            }else{
+                                Integer index=(quantities.size()-1)/2;
+                                System.out.println("The median of "+productType+" is: "+quantities.get(index)[0]);
+                            }
+                        }
+                        break;
+                    case "opps":
+
+                        break;
+                    default:
+                        throw new InvalidObjectException("Invalid object type");
+                }
+                break;
+            case "mean":
+                switch (arr[1]){
+                    case "employeecount":
+                        Object[] employeeCount= accountRepository.findMeanEmployeeCount();
+                        System.out.println("The average employee count is " + employeeCount[0]);
+                        break;
+                    case"quantity":
+                        List <Object[]> products=opportunityRepository.findAvgQuantityGroupByProduct();
+                        for (Object[] o: products) {
+                            //for(int i=1)
+                            System.out.println("The average order of " + o[0] + " is "+o[1]);
+                        }
+                        break;
+                    case "opps":
+                        Object[] oppos= opportunityRepository.findAvgOpportunitiesByAccountId();
+                        System.out.println("The average number of opportunities is " + oppos[0]);
+                        break;
+                    default:
+                        throw new InvalidObjectException("Invalid object type");
+                }
+                break;
+            default:
+                throw new InvalidObjectException("Invalid object type");
+        }
+
+
+    }
+
+
 
 }
