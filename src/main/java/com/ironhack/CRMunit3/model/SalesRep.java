@@ -30,6 +30,10 @@ public class SalesRep {
         this.name = name;
     }
 
+    public void addOpportunity(Opportunity opportunity){
+        this.opportunities.add(opportunity);
+    }
+
     public Integer getSalesRepId() {
         return salesRepId;
     }

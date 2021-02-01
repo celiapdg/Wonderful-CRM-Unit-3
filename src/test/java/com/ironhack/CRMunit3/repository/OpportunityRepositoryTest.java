@@ -89,7 +89,7 @@ class OpportunityRepositoryTest {
 
     @Test
     void findNumberOfOpportunitiesPerSalesRepWithStatus() {
-        List <Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.OPEN);
+        List <Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.OPEN.toString());
         assertEquals(1,result.size());
         assertEquals(1L,result.get(0)[1]);
     }

@@ -51,7 +51,7 @@ public class CrmUnit3Application implements CommandLineRunner {
 			command.commandReader(userInput);
 		}
 
-
+		System.exit(0);
 
 	}
 	public static void showMainMenu(){

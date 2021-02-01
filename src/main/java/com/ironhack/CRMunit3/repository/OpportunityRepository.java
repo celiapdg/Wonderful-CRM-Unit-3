@@ -16,12 +16,23 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, Intege
             "RIGHT JOIN sales_rep s ON s.sales_rep_id = o.sales_rep_id GROUP BY s.sales_rep_id", nativeQuery = true)
     public List<Object[]> findNumberOfOpportunitiesPerSalesRep();
 
-    //TODO: hau que hacer right join aquí para que salgan también los salesrep que no tienen ninguna opportunity asociada.
-    // Además, no se puede hacer count(*) porque cuenta las filas con opportunity NULL, hay que especificar la
-    // columna o.opportunity_id. Ddejo una query pa copiar y pegar arriba, solo habría que añadir el WHERE con el parámetro.
-    // Importante hacer el GROUP BY con el sales_rep_id de la tabla sales_rep (s)
-    @Query("SELECT o.salesRep, COUNT(*) FROM Opportunity o WHERE o.status = :status GROUP BY o.salesRep")
-    public List<Object[]> findNumberOfOpportunitiesPerSalesRepWithStatus(@Param("status") Status status);
+//    @Query(value = "SELECT s.`name`, COUNT(o.opportunity_id) FROM opportunity o " +
+//            "RIGHT JOIN sales_rep s ON s.sales_rep_id = o.sales_rep_id " +
+//            "WHERE o.status = :status GROUP BY s.sales_rep_id", nativeQuery = true)
+
+    // OPCION QUE NO HE PROBADO
+//    SELECT a.field1, b.field2
+//    FROM (
+//                    SELECT field1
+//    FROM table1
+//            WHERE field3 = 'value'
+//            ) AS a
+//    INNER JOIN table2 AS b ON a.field1 = b.field1
+
+    @Query(value = "WITH opps AS (SELECT o.sales_rep_id, COUNT(o.opportunity_id) as count FROM opportunity o " +
+            "WHERE o.status = :status) SELECT s.`name`, opps.count FROM opps " +
+            "RIGHT JOIN sales_rep s ON s.sales_rep_id = opps.sales_rep_id GROUP BY s.sales_rep_id", nativeQuery = true)
+    public List<Object[]> findNumberOfOpportunitiesPerSalesRepWithStatus(@Param("status") String status);
 
     // TODO: aqui y en las siguientes no hace falta ningún JOIN
     @Query("SELECT o.product, COUNT(*) FROM Opportunity o GROUP BY o.product")

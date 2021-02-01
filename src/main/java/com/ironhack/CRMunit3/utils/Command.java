@@ -4,15 +4,13 @@ import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
 import com.ironhack.CRMunit3.repository.*;
 
-import org.springframework.stereotype.*;
-
 import java.io.InvalidObjectException;
 import java.util.*;
 
 import static com.ironhack.CRMunit3.utils.Colors.*;
 import static com.ironhack.CRMunit3.utils.ScanInfo.*;
 
-@Service
+
 public class Command {
 
     public static Sound errorSound = new Sound("error.wav");
@@ -105,6 +103,9 @@ public class Command {
                                 account.getOpportunityList().add(opportunity);
                                 account.getContactList().add(contact);
                                 accountRepository.save(account);
+//                                SalesRep salesRep = opportunity.getSalesRep();
+//                                salesRep.addOpportunity(opportunity);
+//                                salesRepRepository.save(salesRep);
                             break;
                             }
                         case"y":
@@ -390,15 +391,15 @@ public class Command {
                         System.out.println(ANSI_BLUE + "Opportunities created by sales rep");
                         break;
                     case "closed-lost":
-                        resultList = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.CLOSED_LOST);
+                        resultList = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.CLOSED_LOST.toString());
                         System.out.println(ANSI_BLUE + "Opportunities CLOSED-LOST by sales rep");
                         break;
                     case "closed-won":
-                        resultList = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.CLOSED_WON);
+                        resultList = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.CLOSED_WON.toString());
                         System.out.println(ANSI_BLUE + "Opportunities CLOSED-WON by sales rep");
                         break;
                     case "open":
-                        resultList = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.OPEN);
+                        resultList = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.OPEN.toString());
                         System.out.println(ANSI_BLUE + "Opportunities currently OPEN by sales rep");
                         break;
                     default:
