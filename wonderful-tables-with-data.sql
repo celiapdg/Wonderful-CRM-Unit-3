@@ -75,7 +75,7 @@ INSERT INTO contact (`name`, email, company_name,phone_number, account_id) VALUE
 
 INSERT INTO opportunity(product, quantity, contact_id, `status`, sales_rep_id, account_id) VALUES
 ('BOX', 40, 1, 'OPEN', 1, 1),
-('FLATBED', 23, 2, 'CLOSE-WON', 2, 2),
-('HYBRID', 77, 3, 'CLOSE-LOST', 1, 3);
+('FLATBED', 23, 2, 'CLOSE_WON', 2, 2),
+('HYBRID', 77, 3, 'CLOSE_LOST', 1, 3);
 
 
