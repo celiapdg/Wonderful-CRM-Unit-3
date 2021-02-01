@@ -1,6 +1,6 @@
 package com.ironhack.CRMunit3.repository;
 
-import com.ironhack.CRMunit3.enums.Status;
+import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
@@ -50,24 +50,27 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, Intege
 
     @Query(value = "SELECT CAST(AVG(oo.opps) AS double) FROM (SELECT COUNT(o.opportunity_id) AS opps FROM `account` a " +
             "LEFT JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo", nativeQuery = true)
-    public List<Object[]> findAvgOpportunitiesByAccountId();
+    public Object[] findAvgOpportunitiesByAccountId();
 
     @Query(value = "SELECT CAST(MAX(oo.opps) AS double) FROM (SELECT COUNT(o.opportunity_id) AS opps FROM `account` a " +
             "LEFT JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo", nativeQuery = true)
-    public List<Object[]> findMaxOpportunitiesByAccountId();
+    public Object[] findMaxOpportunitiesByAccountId();
 
     @Query(value = "SELECT CAST(MIN(oo.opps) AS double) FROM (SELECT COUNT(o.opportunity_id) AS opps FROM `account` a " +
             "LEFT JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo", nativeQuery = true)
-    public List<Object[]> findMinOpportunitiesByAccountId();
+    public Object[] findMinOpportunitiesByAccountId();
 
 //    quantity
     //TODO: diría que aquí no hace falta el group by, queremos la cantidad media/min/max de productos en general,
     // no la media/min/max por cada tipo de pdto
     @Query("SELECT product, CAST(AVG(quantity) AS double) FROM Opportunity GROUP BY product")
-    public List<Object[]> findAvgGroupByProduct();
+    public List<Object[]> findAvgQuantityGroupByProduct();
     @Query("SELECT product, CAST(MAX(quantity) AS double) FROM Opportunity GROUP BY product")
-    public List<Object[]> findMaxGroupByProduct();
+    public List<Object[]> findMaxQuantityGroupByProduct();
     @Query("SELECT product, CAST(MIN(quantity) AS double) FROM Opportunity GROUP BY product")
-    public List<Object[]> findMinGroupByProduct();
+    public List<Object[]> findMinQuantityGroupByProduct();
+
+    @Query("SELECT quantity FROM Opportunity WHERE product=:product ORDER BY quantity ")
+    public List<Object[]> findOrderedQuantity(@Param("product") Product product);
 
 }
