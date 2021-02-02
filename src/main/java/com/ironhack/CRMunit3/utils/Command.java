@@ -547,7 +547,7 @@ public class Command {
         }
     }
 
-    public void statistics()throws InvalidObjectException{
+    public void statistics() throws InvalidObjectException{
 
         System.out.println(ANSI_BLUE + "Choose between Max, Min, Median and Mean \nfrom EmployeeCount, Quantity and Opps per account");
         Scanner scanner= new Scanner(System.in);
@@ -571,8 +571,9 @@ public class Command {
 
                         break;
                     case "opps":
-                        Object[] oppos= opportunityRepository.findMinOpportunitiesByAccountId();
-                        System.out.println("The minimun number of opportunities is " + oppos[0]);
+                    case "opportunities":
+                        Object[] opps= opportunityRepository.findMinOpportunitiesByAccountId();
+                        System.out.println("The minimun number of opportunities is " + opps[0]);
                         break;
                     default:
                         throw new InvalidObjectException("Invalid object type");
@@ -591,8 +592,9 @@ public class Command {
                         }
                         break;
                     case "opps":
-                        Object[] oppos= opportunityRepository.findMaxOpportunitiesByAccountId();
-                        System.out.println("The maximum number of opportunities is " + oppos[0]);
+                    case "opportunities":
+                        Object[] opps = opportunityRepository.findMaxOpportunitiesByAccountId();
+                        System.out.println("The maximum number of opportunities is " + opps[0]);
                         break;
                     default:
                         throw new InvalidObjectException("Invalid object type");
@@ -629,6 +631,17 @@ public class Command {
                         }
                         break;
                     case "opps":
+                    case "opportunities":
+                        List<Object[]> oppsCount = opportunityRepository.findOrderOpportunitiesByAccountId();
+                        if (oppsCount.size()%2==0){
+                            Integer first =(Integer) oppsCount.get((oppsCount.size()/2)-1)[0];
+                            Integer second =(Integer) oppsCount.get(oppsCount.size()/2)[0];
+                            System.out.println("The median of opportunities per account is: "+(first+second)/2.0);
+
+                        }else{
+                            Integer index=(oppsCount.size()-1)/2;
+                            System.out.println("The median of opportunities per account is: "+oppsCount.get(index)[0]);
+                        }
 
                         break;
                     default:
@@ -649,8 +662,8 @@ public class Command {
                         }
                         break;
                     case "opps":
-                        Object[] oppos= opportunityRepository.findAvgOpportunitiesByAccountId();
-                        System.out.println("The average number of opportunities is " + oppos[0]);
+                        Object[] opps= opportunityRepository.findAvgOpportunitiesByAccountId();
+                        System.out.println("The average number of opportunities is " + opps[0]);
                         break;
                     default:
                         throw new InvalidObjectException("Invalid object type");
