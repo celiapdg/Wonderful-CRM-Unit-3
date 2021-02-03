@@ -16,11 +16,7 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, Intege
             "RIGHT JOIN sales_rep s ON s.sales_rep_id = o.sales_rep_id GROUP BY s.sales_rep_id", nativeQuery = true)
     public List<Object[]> findNumberOfOpportunitiesPerSalesRep();
 
-//    @Query(value = "SELECT s.`name`, COUNT(o.opportunity_id) FROM opportunity o " +
-//            "RIGHT JOIN sales_rep s ON s.sales_rep_id = o.sales_rep_id " +
-//            "WHERE o.status = :status GROUP BY s.sales_rep_id", nativeQuery = true)
-
-    // OPCION QUE NO HE PROBADO
+    // OPCION QUE NO HE PROBADO para la sig query
 //    SELECT a.field1, b.field2
 //    FROM (
 //                    SELECT field1
@@ -34,7 +30,6 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, Intege
             "RIGHT JOIN sales_rep s ON s.sales_rep_id = opps.sales_rep_id GROUP BY s.sales_rep_id", nativeQuery = true)
     public List<Object[]> findNumberOfOpportunitiesPerSalesRepWithStatus(@Param("status") String status);
 
-    // TODO: aqui y en las siguientes no hace falta ningún JOIN
     @Query("SELECT o.product, COUNT(*) FROM Opportunity o GROUP BY o.product")
     public List<Object[]> findNumberOfOpportunitiesPerProduct();
 
@@ -59,28 +54,30 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, Intege
     @Query("SELECT a.industry, COUNT(*) FROM Opportunity o JOIN Account a ON a.accountId = o.account WHERE o.status = :status GROUP BY a.industry")
     public List<Object[]> findNumberOfOpportunitiesPerIndustryWithStatus(@Param("status") Status status);
 
-    @Query(value = "SELECT CAST(AVG(oo.opps) AS double) FROM (SELECT COUNT(o.opportunity_id) AS opps FROM `account` a " +
+    @Query(value = "SELECT CAST(AVG(oo.count) AS double) FROM (SELECT COUNT(o.opportunity_id) AS count FROM `account` a " +
             "LEFT JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo", nativeQuery = true)
     public Object[] findAvgOpportunitiesByAccountId();
 
-    @Query(value = "SELECT CAST(MAX(oo.opps) AS double) FROM (SELECT COUNT(o.opportunity_id) AS opps FROM `account` a " +
+    @Query(value = "SELECT CAST(MAX(oo.count) AS double) FROM (SELECT COUNT(o.opportunity_id) AS count FROM `account` a " +
             "LEFT JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo", nativeQuery = true)
     public Object[] findMaxOpportunitiesByAccountId();
 
-    @Query(value = "SELECT CAST(MIN(oo.opps) AS double) FROM (SELECT COUNT(o.opportunity_id) AS opps FROM `account` a " +
+    @Query(value = "SELECT CAST(MIN(oo.count) AS double) FROM (SELECT COUNT(o.opportunity_id) AS count FROM `account` a " +
             "LEFT JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo", nativeQuery = true)
     public Object[] findMinOpportunitiesByAccountId();
 
-//    quantity
-    //TODO: diría que aquí no hace falta el group by, queremos la cantidad media/min/max de productos en general,
-    // no la media/min/max por cada tipo de pdto
+    // es fea, pero funciona
+    @Query(value = "SELECT oo.count FROM (SELECT COUNT(o.opportunity_id) AS count FROM `account` a " +
+            "LEFT JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo ORDER BY count", nativeQuery = true)
+    public List<Object[]> findOrderOpportunitiesByAccountId();
+
+//  Quantity statistics grouped by product
     @Query("SELECT product, CAST(AVG(quantity) AS double) FROM Opportunity GROUP BY product")
     public List<Object[]> findAvgQuantityGroupByProduct();
     @Query("SELECT product, CAST(MAX(quantity) AS double) FROM Opportunity GROUP BY product")
     public List<Object[]> findMaxQuantityGroupByProduct();
     @Query("SELECT product, CAST(MIN(quantity) AS double) FROM Opportunity GROUP BY product")
     public List<Object[]> findMinQuantityGroupByProduct();
-
     @Query("SELECT quantity FROM Opportunity WHERE product=:product ORDER BY quantity ")
     public List<Object[]> findOrderedQuantity(@Param("product") Product product);
 
