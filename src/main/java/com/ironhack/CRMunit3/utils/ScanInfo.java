@@ -8,7 +8,7 @@ import java.util.Scanner;
 import static com.ironhack.CRMunit3.utils.Checker.*;
 
 public class ScanInfo {
-    private static Scanner scanner = new Scanner(System.in);
+    public static Scanner scanner = new Scanner(System.in);
 
     public static String askName(){
         //Set a boolean to false to enter the loop
