@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.ironhack.CRMunit3.utils.Colors.*;
+
 @Entity
 public class Account {
 
@@ -46,6 +48,20 @@ public class Account {
         this.opportunityList.add(opportunity);
     }
 
+    public Account(Industry industry, int employeeCount, String city, String country,
+                   List<Contact> contacts, List<Opportunity> opportunities) {
+        this.employeeCount = employeeCount;
+        this.city = city;
+        this.country = country;
+        this.industry = industry;
+        for (Contact contact : contacts){
+            this.contactList.add(contact);
+        }
+        for (Opportunity opportunity : opportunities){
+            this.opportunityList.add(opportunity);
+        }
+    }
+
     public int getEmployeeCount() {
         return employeeCount;
     }
@@ -72,15 +88,14 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account{" +
-                "industry=" + industry +
-                ", employeeCount=" + employeeCount +
-                ", city='" + city + '\'' +
-                ", country='" + country + '\'' +
-                ", contactList=" + contactList +
-                ", opportunityList=" + opportunityList +
-                ", accountId=" + accountId +
-                '}';
+        return ANSI_CYAN + ANSI_BOLD +
+                "Account " + accountId +
+                ANSI_RESET + ANSI_BLUE +
+                "\nindustry = " + industry +
+                "\nemployeeCount = " + employeeCount +
+                ", \ncity = " + city +
+                ", \ncountry = " + country +
+                ", \nopportunityList:\n" + opportunityList;
     }
 
     @Override

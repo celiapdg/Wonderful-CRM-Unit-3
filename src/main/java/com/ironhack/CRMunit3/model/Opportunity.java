@@ -4,6 +4,9 @@ import com.ironhack.CRMunit3.enums.*;
 
 import javax.persistence.*;
 import java.util.Objects;
+
+import static com.ironhack.CRMunit3.utils.Colors.*;
+
 @Entity
 public class Opportunity {
 
@@ -83,12 +86,14 @@ public class Opportunity {
 
     @Override
     public String toString() {
-        return (char)27 + "[34mOpportunity " + opportunityId+
+        return ANSI_CYAN + ANSI_BOLD +
+                "Opportunity " + opportunityId +
+                ANSI_RESET + ANSI_BLUE +
                 "\nproduct = " + product +
                 "\namount = " + quantity +
                 ", \nstatus = " + status +
                 ", \nsales rep = " + salesRep.getName() +
-                ", \n" + decisionMaker;
+                ", \n" + decisionMaker + "\n";
     }
 
     @Override

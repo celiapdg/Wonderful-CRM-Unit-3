@@ -7,6 +7,9 @@ import org.hibernate.annotations.FetchMode;
 import javax.persistence.*;
 import java.util.*;
 
+import static com.ironhack.CRMunit3.utils.Colors.*;
+import static com.ironhack.CRMunit3.utils.Colors.ANSI_BOLD;
+
 @Entity
 public class SalesRep {
 
@@ -68,9 +71,11 @@ public class SalesRep {
 
     @Override
     public String toString() {
-        return "SalesRep: " +salesRepId +
-                "\nname='" + name +
-                "\nopportunities=" + opportunities +
-                "\nleads=" + leads;
+        return ANSI_CYAN + ANSI_BOLD +
+                "SalesRep: " +salesRepId +
+                ANSI_RESET + ANSI_BLUE +
+                "\nname = " + name +
+                "\nopportunities:\n" + opportunities +
+                "\nleads:\n" + leads;
     }
 }

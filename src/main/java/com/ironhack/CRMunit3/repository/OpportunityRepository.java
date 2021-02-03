@@ -66,7 +66,6 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, Intege
             "LEFT JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo", nativeQuery = true)
     public Object[] findMinOpportunitiesByAccountId();
 
-    // es fea, pero funciona
     @Query(value = "SELECT oo.count FROM (SELECT COUNT(o.opportunity_id) AS count FROM `account` a " +
             "LEFT JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo ORDER BY count", nativeQuery = true)
     public List<Object[]> findOrderOpportunitiesByAccountId();
