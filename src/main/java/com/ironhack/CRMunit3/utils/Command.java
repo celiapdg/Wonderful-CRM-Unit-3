@@ -16,7 +16,7 @@ import static com.ironhack.CRMunit3.utils.ScanInfo.*;
 public class Command {
 
     public static Sound errorSound = new Sound("error.wav");
-    public static Sound bipSound = new Sound("bip.wav");
+    public static Sound bipSound = new Sound("yuhu.wav");
     public static Sound exitSound = new Sound("exit.wav");
 
     SalesRepRepository salesRepRepository;
@@ -190,6 +190,7 @@ public class Command {
 
         salesRepRepository.save(salesRep);
         System.out.println(ANSI_GREEN + "New Sales Rep created!!\n"+salesRep);
+        bipSound.playSound();
         return salesRep;
     }
 
@@ -251,7 +252,7 @@ public class Command {
                     }
                     bipSound.playSound();
                 } else {
-                    System.out.println((char) 27 + "[31mThere are no leads at the moment");
+                    System.out.println(ANSI_RED + "There are no leads at the moment");
                     errorSound.playSound();
                 }
             }
@@ -263,7 +264,7 @@ public class Command {
                     }
                     bipSound.playSound();
                 } else {
-                    System.out.println((char) 27 + "[31mThere are no opportunities at the moment");
+                    System.out.println(ANSI_RED + "There are no opportunities at the moment");
                     errorSound.playSound();
                 }
             }
@@ -275,7 +276,7 @@ public class Command {
                     }
                     bipSound.playSound();
                 } else {
-                    System.out.println((char) 27 + "[31mThere are no contacts at the moment");
+                    System.out.println(ANSI_RED + "There are no contacts at the moment");
                     errorSound.playSound();
                 }
             }
@@ -287,7 +288,7 @@ public class Command {
                     }
                     bipSound.playSound();
                 } else {
-                    System.out.println((char) 27 + "[31mThere are no accounts at the moment");
+                    System.out.println(ANSI_RED + "There are no accounts at the moment");
                     errorSound.playSound();
                 }
             }
@@ -299,11 +300,11 @@ public class Command {
                     }
                     bipSound.playSound();
                 } else {
-                    System.out.println((char) 27 + "[31mThere are no sales reps at the moment");
+                    System.out.println(ANSI_RED + "There are no sales reps at the moment");
                     errorSound.playSound();
                 }
             }
-            default -> throw new InvalidObjectException((char) 27 + "[31mInvalid object type");
+            default -> throw new InvalidObjectException(ANSI_RED + "Invalid object type");
         }
     }
 
@@ -340,7 +341,7 @@ public class Command {
                 System.out.println(account.toString());
                 return account;
             }
-            default -> throw new InvalidObjectException((char) 27 + "[31mInvalid object type");
+            default -> throw new InvalidObjectException(ANSI_RED + "Invalid object type");
         }
     }
 
@@ -358,21 +359,21 @@ public class Command {
 
         //status will be changed if it's not already set to closed (that makes sense, right?)
         if (opportunity.getStatus() == Status.CLOSED_LOST){
-            System.out.println((char)27 + "[39mOpportunity was already closed-lost");
+            System.out.println(ANSI_RESET + "Opportunity was already closed-lost");
         }else if (opportunity.getStatus() == Status.CLOSED_WON){
-            System.out.println((char)27 + "[39mOpportunity was already closed-won");
+            System.out.println(ANSI_RESET + "Opportunity was already closed-won");
         }else{
             switch (closeType) {
                 case "close-won" -> {
                     opportunity.setStatus(Status.CLOSED_WON);
                     System.out.println(opportunity);
-                    System.out.println((char) 27 + "[32mOpportunity closed-won");
+                    System.out.println(ANSI_GREEN + "Opportunity closed-won");
                     opportunityRepository.save(opportunity);
                 }
                 case "close-lost" -> {
                     opportunity.setStatus(Status.CLOSED_LOST);
                     System.out.println(opportunity);
-                    System.out.println((char) 27 + "[32mOpportunity closed-lost");
+                    System.out.println(ANSI_GREEN + "Opportunity closed-lost");
                     opportunityRepository.save(opportunity);
                 }
             }
@@ -600,7 +601,7 @@ public class Command {
                         throw new InvalidObjectException("Invalid object type");
                 }
                 break;
-            case "median":
+            case "median": // todo: hacer una función a la que se le pase una List<Object[]> para no repetir codigo
                 switch (arr[1]){
                     case "employeecount":
                         List<Object[]> employeeCount= accountRepository.orderEmployeeCount();

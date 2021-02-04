@@ -3,6 +3,9 @@ package com.ironhack.CRMunit3.model;
 import javax.persistence.*;
 import java.util.Objects;
 
+import static com.ironhack.CRMunit3.utils.Colors.*;
+import static com.ironhack.CRMunit3.utils.Colors.ANSI_BLUE;
+
 @Entity
 @Table(name="`lead`")
 public class Lead {
@@ -83,12 +86,14 @@ public class Lead {
 
     @Override
     public String toString() {
-        return (char)27 + "[34mLead " + leadId +
+        return ANSI_CYAN + ANSI_BOLD +
+                "Lead " + leadId +
+                ANSI_RESET + ANSI_BLUE +
                 "\nname = " + name +
                 ", \nphone number = " + phoneNumber +
                 ", \nemail = " + email +
                 ", \ncompany name = " + companyName+
-                ", \nsales rep = " + salesRep.getName();
+                ", \nsales rep = " + salesRep.getName() + "\n";
     }
 
     @Override

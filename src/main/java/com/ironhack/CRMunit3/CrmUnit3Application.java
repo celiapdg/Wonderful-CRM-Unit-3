@@ -32,7 +32,8 @@ public class CrmUnit3Application implements CommandLineRunner {
 		//Create a Scanner to collect user input
 		Scanner myScanner = new Scanner(System.in);
 
-		System.out.println(ANSI_CYAN_BACKGROUND + ANSI_BLACK + "Welcome to the best CRM in the world");
+		System.out.println(ANSI_CYAN_BACKGROUND + ANSI_BLACK +
+						   "Welcome to the best CRM in the world" + ANSI_DEFAULT_BACKGROUND);
 
 		//set userInput to an empty string to enter the next loop
 		String userInput="";
@@ -40,19 +41,19 @@ public class CrmUnit3Application implements CommandLineRunner {
 		Command command = new Command(salesRepRepository,  leadRepository, contactRepository,opportunityRepository, accountRepository);
 
 		//This loops runs until the user chooses the exit option
-		while (!userInput.equals("exit")){
+//		while (!userInput.equals("exit")){
+//
+//			showMainMenu();
+//			// Get input from the user organized
+//			userInput = myScanner.nextLine()
+//					.toLowerCase()
+//					.trim();
+//
+//			//Go to utils Command to the this method functionality
+//			command.commandReader(userInput);
+		//}
 
-			showMainMenu();
-			// Get input from the user organized
-			userInput = myScanner.nextLine()
-					.toLowerCase()
-					.trim();
-
-			//Go to utils Command to the this method functionality
-			command.commandReader(userInput);
-		}
-
-		System.exit(0);
+		//System.exit(0);
 
 	}
 	public static void showMainMenu(){

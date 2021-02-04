@@ -46,24 +46,29 @@ class AccountRepositoryTest {
 
         salesRepRepository.saveAll(List.of(salesRep1, salesRep2));
 
-        leadRepository.saveAll(List.of(new Lead("Pepa Flores", "666666666", "asda@asd.asd", "caca", salesRep1),
-                new Lead("Pipo Florín", "666444466", "asda@asd.asd", "pedo", salesRep2),
+        leadRepository.saveAll(List.of(new Lead("Pepa Flores", "666666666", "asda@asd.asd","caca", salesRep1),
+                new Lead("Pipo Florín", "666444466", "asda@asd.asd","pedo", salesRep2),
                 new Lead("Rosa Asor", "626262626", "ros@aa.sor", "pis", salesRep1)));
 
-        contactRepository.saveAll(List.of(contact1, contact2, contact3));
+        contactRepository.saveAll(List.of(contact1,contact2, contact3));
 
         opportunityRepository.saveAll(List.of(opportunity1, opportunity2, opportunity3));
 
-        Account account = new Account(Industry.OTHER, 40, "Albacete", "ESSSSPAÑA", contact1, opportunity1);
-        accountRepository.save(account);
-        opportunity1.setAccount(account);
-        opportunityRepository.save(opportunity1);
+        Account account1 = new Account(Industry.OTHER, 40, "Albacete", "ESSSSPAÑA",
+                List.of(contact1,contact2), List.of(opportunity1,opportunity2));
+        Account account2 = new Account(Industry.MEDICAL, 75, "Buguibugui", "EZPAÑA", contact1, opportunity3);
+        accountRepository.saveAll(List.of(account1,account2));
+        opportunity1.setAccount(account1);
+        opportunity2.setAccount(account1);
+        opportunity3.setAccount(account2);
+        opportunityRepository.saveAll(List.of(opportunity1,opportunity2,opportunity3));
     }
 
     @AfterEach
     void tearDown() {
         opportunityRepository.deleteAll();
         contactRepository.deleteAll();
+        accountRepository.deleteAll();
         leadRepository.deleteAll();
         salesRepRepository.deleteAll();
     }

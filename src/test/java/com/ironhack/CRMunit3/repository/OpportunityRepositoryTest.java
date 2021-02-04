@@ -53,16 +53,21 @@ class OpportunityRepositoryTest {
 
         opportunityRepository.saveAll(List.of(opportunity1, opportunity2, opportunity3));
 
-        Account account = new Account(Industry.OTHER, 40, "Albacete", "ESSSSPAÑA", contact1, opportunity1);
-        accountRepository.save(account);
-        opportunity1.setAccount(account);
-        opportunityRepository.save(opportunity1);
+        Account account1 = new Account(Industry.OTHER, 40, "Albacete", "ESSSSPAÑA",
+                                       List.of(contact1,contact2), List.of(opportunity1,opportunity2));
+        Account account2 = new Account(Industry.MEDICAL, 75, "Buguibugui", "EZPAÑA", contact1, opportunity3);
+        accountRepository.saveAll(List.of(account1,account2));
+        opportunity1.setAccount(account1);
+        opportunity2.setAccount(account1);
+        opportunity3.setAccount(account2);
+        opportunityRepository.saveAll(List.of(opportunity1,opportunity2,opportunity3));
     }
 
     @AfterEach
     void tearDown() {
         opportunityRepository.deleteAll();
         contactRepository.deleteAll();
+        accountRepository.deleteAll();
         leadRepository.deleteAll();
         salesRepRepository.deleteAll();
     }
@@ -83,15 +88,15 @@ class OpportunityRepositoryTest {
     void findNumberOfOpportunitiesPerSalesRep() {
         List <Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerSalesRep();
         assertEquals(2,result.size());
-        assertEquals(1L,result.get(0)[1]);
-        assertEquals(2L,result.get(1)[1]);
+        assertEquals(new BigInteger(String.valueOf(1)),result.get(0)[1]);
+        assertEquals(new BigInteger(String.valueOf(2)),result.get(1)[1]);
     }
 
     @Test
     void findNumberOfOpportunitiesPerSalesRepWithStatus() {
         List <Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerSalesRepWithStatus(Status.OPEN.toString());
-        assertEquals(1,result.size());
-        assertEquals(1L,result.get(0)[1]);
+        assertEquals(2,result.size());
+        assertEquals(new BigInteger(String.valueOf(1)), result.get(0)[1]);
     }
 
     @Test
@@ -157,24 +162,39 @@ class OpportunityRepositoryTest {
     }
 
     @Test
-    void findAvgGroupByProduct() {
+    void findOrderOpportunitiesByAccountId() {
+        List<Object[]> result = opportunityRepository.findOrderOpportunitiesByAccountId();
+        assertEquals(new BigInteger(String.valueOf(1)), result.get(0)[0]);
+        assertEquals(new BigInteger(String.valueOf(2)), result.get(1)[0]);
+    }
+
+    @Test
+    void findAvgQuantityGroupByProduct() {
         List<Object[]> result = opportunityRepository.findAvgQuantityGroupByProduct();
         assertEquals(3, result.size());
         assertEquals((double) 40, result.get(0)[1]);
     }
 
     @Test
-    void findMaxGroupByProduct() {
+    void findMaxQuantityGroupByProduct() {
         List<Object[]> result = opportunityRepository.findMaxQuantityGroupByProduct();
         assertEquals(3, result.size());
         assertEquals((double) 40, result.get(0)[1]);
     }
 
     @Test
-    void findMinGroupByProduct() {
+    void findMinQuantityGroupByProduct() {
         List<Object[]> result = opportunityRepository.findMinQuantityGroupByProduct();
         assertEquals(3, result.size());
         assertEquals((double) 40, result.get(0)[1]);
+    }
+
+    @Test
+    void findOrderedQuantity() {
+        List<Object[]> result = opportunityRepository.findOrderedQuantity(Product.HYBRID);
+        assertEquals(1, result.size());
+        assertEquals( 77, result.get(0)[0]);
+
     }
 
     @Test
@@ -190,4 +210,8 @@ class OpportunityRepositoryTest {
         assertEquals(1L, result.get(0)[1]);
         assertEquals(Product.BOX, result.get(0)[0]);
     }
+
+
+
+
 }

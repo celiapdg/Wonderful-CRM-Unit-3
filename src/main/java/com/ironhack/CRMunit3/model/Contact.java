@@ -2,6 +2,10 @@ package com.ironhack.CRMunit3.model;
 
 import javax.persistence.*;
 import java.util.Objects;
+
+import static com.ironhack.CRMunit3.utils.Colors.*;
+import static com.ironhack.CRMunit3.utils.Colors.ANSI_BOLD;
+
 @Entity
 public class Contact {
 
@@ -60,7 +64,9 @@ public class Contact {
 
     @Override
     public String toString() {
-        return "Contact: " +
+        return ANSI_CYAN + ANSI_BOLD +
+                "Contact: " + contactId +
+                ANSI_RESET + ANSI_BLUE +
                 "\n  name = " + name +
                 ", \n  phoneNumber = " + phoneNumber +
                 ", \n  email = " + email  +

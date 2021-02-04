@@ -66,7 +66,6 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, Intege
             "LEFT JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo", nativeQuery = true)
     public Object[] findMinOpportunitiesByAccountId();
 
-    // es fea, pero funciona
     @Query(value = "SELECT oo.count FROM (SELECT COUNT(o.opportunity_id) AS count FROM `account` a " +
             "LEFT JOIN opportunity o ON a.account_id = o.account_id GROUP BY a.account_id) AS oo ORDER BY count", nativeQuery = true)
     public List<Object[]> findOrderOpportunitiesByAccountId();
@@ -74,10 +73,13 @@ public interface OpportunityRepository extends JpaRepository<Opportunity, Intege
 //  Quantity statistics grouped by product
     @Query("SELECT product, CAST(AVG(quantity) AS double) FROM Opportunity GROUP BY product")
     public List<Object[]> findAvgQuantityGroupByProduct();
+
     @Query("SELECT product, CAST(MAX(quantity) AS double) FROM Opportunity GROUP BY product")
     public List<Object[]> findMaxQuantityGroupByProduct();
+
     @Query("SELECT product, CAST(MIN(quantity) AS double) FROM Opportunity GROUP BY product")
     public List<Object[]> findMinQuantityGroupByProduct();
+
     @Query("SELECT quantity FROM Opportunity WHERE product=:product ORDER BY quantity ")
     public List<Object[]> findOrderedQuantity(@Param("product") Product product);
 
