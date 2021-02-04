@@ -102,7 +102,7 @@ class OpportunityRepositoryTest {
     @Test
     void findNumberOfOpportunitiesPerCity() {
         List<Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerCity();
-        assertEquals(1L, result.get(0)[1]);
+        assertEquals(2L, result.get(0)[1]);
         assertEquals("Albacete",result.get(0)[0]);
     }
 
@@ -117,7 +117,7 @@ class OpportunityRepositoryTest {
     @Test
     void findNumberOfOpportunitiesPerCountry() {
         List<Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerCountry();
-        assertEquals(1L, result.get(0)[1]);
+        assertEquals(2L, result.get(0)[1]);
         assertEquals("ESSSSPAÑA", result.get(0)[0]);
     }
 
@@ -131,7 +131,7 @@ class OpportunityRepositoryTest {
     @Test
     void findNumberOfOpportunitiesPerIndustry() {
         List<Object[]> result = opportunityRepository.findNumberOfOpportunitiesPerIndustry();
-        assertEquals(1L, result.get(0)[1]);
+        assertEquals(2L, result.get(0)[1]);
         assertEquals(Industry.OTHER, result.get(0)[0]);
     }
 
@@ -146,13 +146,13 @@ class OpportunityRepositoryTest {
     @Test
     void findAvgOpportunitiesByAccountId() {
         Object[] result = opportunityRepository.findAvgOpportunitiesByAccountId();
-        assertEquals((double) 1, result[0]);
+        assertEquals((double) 1.5, result[0]);
     }
 
     @Test
     void findMaxOpportunitiesByAccountId() {
         Object[] result = opportunityRepository.findMaxOpportunitiesByAccountId();
-        assertEquals((double) 1, result[0]);
+        assertEquals((double) 2, result[0]);
     }
 
     @Test
@@ -164,8 +164,8 @@ class OpportunityRepositoryTest {
     @Test
     void findOrderOpportunitiesByAccountId() {
         List<Object[]> result = opportunityRepository.findOrderOpportunitiesByAccountId();
-        assertEquals(new BigInteger(String.valueOf(1)), result.get(0)[0]);
-        assertEquals(new BigInteger(String.valueOf(2)), result.get(1)[0]);
+        assertEquals(1.0, result.get(0)[0]);
+        assertEquals(2.0, result.get(1)[0]);
     }
 
     @Test
@@ -191,10 +191,9 @@ class OpportunityRepositoryTest {
 
     @Test
     void findOrderedQuantity() {
-        List<Object[]> result = opportunityRepository.findOrderedQuantity(Product.HYBRID);
+        List<Object[]> result = opportunityRepository.findOrderedQuantity(Product.HYBRID.toString());
         assertEquals(1, result.size());
-        assertEquals( 77, result.get(0)[0]);
-
+        assertEquals( 77.0, result.get(0)[0]);
     }
 
     @Test

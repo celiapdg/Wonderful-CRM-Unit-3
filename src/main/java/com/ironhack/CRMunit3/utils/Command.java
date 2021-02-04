@@ -10,13 +10,15 @@ import java.io.InvalidObjectException;
 import java.util.*;
 
 import static com.ironhack.CRMunit3.utils.Colors.*;
+import static com.ironhack.CRMunit3.utils.Math.median;
 import static com.ironhack.CRMunit3.utils.ScanInfo.*;
 
 @Service
 public class Command {
 
     public static Sound errorSound = new Sound("error.wav");
-    public static Sound bipSound = new Sound("yuhu.wav");
+    public static Sound bipSound = new Sound("bip.wav");
+    public static Sound yuhuSound = new Sound("yuhu.wav");
     public static Sound exitSound = new Sound("exit.wav");
 
     SalesRepRepository salesRepRepository;
@@ -70,7 +72,7 @@ public class Command {
 
                                 //this method is defined below
                                 newLead(name, phone, email, company, salesRep);
-                                bipSound.playSound();
+                                yuhuSound.playSound();
                             break;
                         default:
                             System.out.println(ANSI_RED + "That is not a valid command");
@@ -126,7 +128,7 @@ public class Command {
 
                     removeLead(leadRepository.findByLeadId(id));
                     System.out.println(ANSI_GREEN + "New opportunity created!!\n"+opportunity);
-                    bipSound.playSound();
+                    yuhuSound.playSound();
                     break;
                 case "show":
                     show(arr[1]);
@@ -190,7 +192,7 @@ public class Command {
 
         salesRepRepository.save(salesRep);
         System.out.println(ANSI_GREEN + "New Sales Rep created!!\n"+salesRep);
-        bipSound.playSound();
+        yuhuSound.playSound();
         return salesRep;
     }
 
@@ -448,8 +450,6 @@ public class Command {
                 }
                 break;
             case "city":
-                // todo: sacar el bucle de todos los casos y ponerlo al final del case city.
-                // todo: añadir mensaje en cada caso para indicar el resultado de la query
                 switch (arr[1]){
                     case "opportunity":
                         List<Object[]> opByCity = opportunityRepository.findNumberOfOpportunitiesPerCity();
@@ -480,8 +480,6 @@ public class Command {
                 }
                 break;
             case "country":
-                // todo: sacar el bucle de todos los casos y ponerlo al final del case country.
-                // todo: añadir mensaje en cada caso para indicar el resultado de la query
                 switch (arr[1]){
                     case "opportunity":
                         List<Object[]> opByCountry = opportunityRepository.findNumberOfOpportunitiesPerCountry();
@@ -512,8 +510,6 @@ public class Command {
                 }
                 break;
             case "industry":
-                // todo: sacar el bucle de todos los casos y ponerlo al final del case industry.
-                // todo: añadir mensaje en cada caso para indicar el resultado de la query
                 switch (arr[1]){
                     case "opportunity":
                         List<Object[]> opByIndustry = opportunityRepository.findNumberOfOpportunitiesPerIndustry();
@@ -601,55 +597,31 @@ public class Command {
                         throw new InvalidObjectException("Invalid object type");
                 }
                 break;
-            case "median": // todo: hacer una función a la que se le pase una List<Object[]> para no repetir codigo
+            case "median":
                 switch (arr[1]){
                     case "employeecount":
                         List<Object[]> employeeCount= accountRepository.orderEmployeeCount();
-                        if (employeeCount.size()%2==0){
-                            Integer first =(Integer) employeeCount.get((employeeCount.size()/2)-1)[0];
-                            Integer second =(Integer) employeeCount.get(employeeCount.size()/2)[0];
-                            System.out.println("The median of employee count is: "+(first+second)/2.0);
-
-                        }else{
-                            Integer index=(employeeCount.size()-1)/2;
-                            System.out.println("The median of employee count is: "+employeeCount.get(index)[0]);
-                        }
-
+                        System.out.println("The median of employee count is: " + median(employeeCount));
                         break;
                     case"quantity":
                         Product[] products={Product.BOX, Product.HYBRID, Product.FLATBED};
                         for (Product productType: products) {
-                            List <Object[]> quantities=opportunityRepository.findOrderedQuantity(productType);
-                            if (quantities.size()%2==0){
-                                Integer first =(Integer) quantities.get((quantities.size()/2)-1)[0];
-                                Integer second =(Integer) quantities.get(quantities.size()/2)[0];
-                                System.out.println("The median of "+productType+" is: "+(first+second)/2.0);
-
-                            }else{
-                                Integer index=(quantities.size()-1)/2;
-                                System.out.println("The median of "+productType+" is: "+quantities.get(index)[0]);
-                            }
+                            List<Object[]> quantities = opportunityRepository.findOrderedQuantity(productType.toString());
+                            System.out.println("The median of "+productType+" is: " + median(quantities));
                         }
                         break;
                     case "opps":
                     case "opportunities":
                         List<Object[]> oppsCount = opportunityRepository.findOrderOpportunitiesByAccountId();
-                        if (oppsCount.size()%2==0){
-                            Integer first =(Integer) oppsCount.get((oppsCount.size()/2)-1)[0];
-                            Integer second =(Integer) oppsCount.get(oppsCount.size()/2)[0];
-                            System.out.println("The median of opportunities per account is: "+(first+second)/2.0);
-
-                        }else{
-                            Integer index=(oppsCount.size()-1)/2;
-                            System.out.println("The median of opportunities per account is: "+oppsCount.get(index)[0]);
-                        }
-
+                        ;
+                        System.out.println("The median of opportunities per account is: " + median(oppsCount));
                         break;
                     default:
                         throw new InvalidObjectException("Invalid object type");
                 }
                 break;
             case "mean":
+            case "avg":
                 switch (arr[1]){
                     case "employeecount":
                         Object[] employeeCount= accountRepository.findMeanEmployeeCount();
@@ -658,7 +630,6 @@ public class Command {
                     case"quantity":
                         List <Object[]> products=opportunityRepository.findAvgQuantityGroupByProduct();
                         for (Object[] o: products) {
-                            //for(int i=1)
                             System.out.println("The average order of " + o[0] + " is "+o[1]);
                         }
                         break;

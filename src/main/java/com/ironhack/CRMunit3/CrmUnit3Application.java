@@ -41,6 +41,8 @@ public class CrmUnit3Application implements CommandLineRunner {
 		Command command = new Command(salesRepRepository,  leadRepository, contactRepository,opportunityRepository, accountRepository);
 
 		//This loops runs until the user chooses the exit option
+
+		// TODO: you have to comment this to run the tests
 //		while (!userInput.equals("exit")){
 //
 //			showMainMenu();
@@ -51,11 +53,11 @@ public class CrmUnit3Application implements CommandLineRunner {
 //
 //			//Go to utils Command to the this method functionality
 //			command.commandReader(userInput);
-		//}
-
-		//System.exit(0);
-
+//		}
+//		System.exit(0);
+		// TODO: end of the comment to run the tests
 	}
+
 	public static void showMainMenu(){
 		System.out.println(ANSI_RESET + "What do you want to do?:");
 		System.out.println("- new sales rep");

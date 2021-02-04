@@ -23,7 +23,6 @@ class ScanInfoTest {
         InputStream in = new ByteArrayInputStream(name.getBytes());
         scanner = new Scanner(in);
         assertEquals(name, askName());
-
     }
 
     @Test
@@ -34,7 +33,6 @@ class ScanInfoTest {
         InputStream in = new ByteArrayInputStream(id.getBytes());
         scanner = new Scanner(in);
         assertEquals(id1, askSalesRep());
-
     }
 
     @Test
@@ -59,7 +57,6 @@ class ScanInfoTest {
         InputStream in = new ByteArrayInputStream(product.getBytes());
         scanner = new Scanner(in);
         assertEquals(Product.BOX, askProduct());
-
     }
 
     @Test
@@ -70,7 +67,6 @@ class ScanInfoTest {
         InputStream in = new ByteArrayInputStream(quantity.getBytes());
         scanner = new Scanner(in);
         assertEquals(num, askQuantity());
-
     }
 
     @Test
@@ -79,7 +75,6 @@ class ScanInfoTest {
         InputStream in = new ByteArrayInputStream(industry.getBytes());
         scanner = new Scanner(in);
         assertEquals(Industry.PRODUCE, askIndustry());
-
     }
 
     @Test
@@ -98,7 +93,6 @@ class ScanInfoTest {
         InputStream in = new ByteArrayInputStream(city.getBytes());
         scanner = new Scanner(in);
         assertEquals(city, askCity());
-
     }
 
     @Test
@@ -108,9 +102,5 @@ class ScanInfoTest {
         scanner = new Scanner(in);
         assertEquals(country, askCountry());
     }
-
-
-
-
 
 }

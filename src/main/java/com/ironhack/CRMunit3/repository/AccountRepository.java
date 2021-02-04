@@ -14,7 +14,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Query("SELECT AVG(a.employeeCount) FROM Account a")
     public Object[] findMeanEmployeeCount();
 
-    @Query("SELECT employeeCount FROM Account a ORDER BY employeeCount")
+    @Query(value = "SELECT CAST(employee_count AS DOUBLE) FROM account ORDER BY employee_count", nativeQuery = true)
     public List<Object[]> orderEmployeeCount();
 
     @Query("SELECT MIN(a.employeeCount) FROM Account a")

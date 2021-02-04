@@ -37,9 +37,13 @@ class LeadRepositoryTest {
         salesRepRepository.deleteAll();
     }
 
-        // TODO
     @Test
     void findByLeadId() {
+//      Let's look for Pepa Flores:
+        int id = leadRepository.findAll().get(0).getLeadId();
+        System.out.println();
+//      and confirm this is Pepa:
+        assertEquals("Pepa Flores", leadRepository.findByLeadId(id).getName());
     }
 
     @Test

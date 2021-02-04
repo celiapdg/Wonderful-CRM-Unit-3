@@ -75,7 +75,7 @@ class AccountRepositoryTest {
 
     @Test
     void findByAccountId() {
-        Account result = accountRepository.findByAccountId(1);
+        Account result = accountRepository.findByAccountId(accountRepository.findAll().get(0).getAccountId());
         assertEquals("Albacete", result.getCity());
     }
 
@@ -83,14 +83,14 @@ class AccountRepositoryTest {
     void findMeanEmployeeCount() {
         Object[] result = accountRepository.findMeanEmployeeCount();
         //assertEquals(40,result.get(0)[0]);
-        assertEquals((double) 40, (double) result[0]);
+        assertEquals((double) 57.5, (double) result[0]);
     }
 
     @Test
     void orderEmployeeCount() {
         List <Object[]> result = accountRepository.orderEmployeeCount();
         //assertEquals(40,result.get(0)[0]);
-        assertEquals(40, result.get(0)[0]);
+        assertEquals(40.0, result.get(0)[0]);
     }
 
     @Test
@@ -104,6 +104,6 @@ class AccountRepositoryTest {
     void findMaxEmployeeCount() {
         Object[] result = accountRepository.findMaxEmployeeCount();
         //assertEquals(40,result.get(0)[0]);
-        assertEquals(40, result[0]);
+        assertEquals(75, result[0]);
     }
 }
