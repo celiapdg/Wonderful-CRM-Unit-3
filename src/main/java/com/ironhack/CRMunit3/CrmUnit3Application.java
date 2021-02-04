@@ -43,18 +43,18 @@ public class CrmUnit3Application implements CommandLineRunner {
 		//This loops runs until the user chooses the exit option
 
 		// TODO: you have to comment this to run the tests
-//		while (!userInput.equals("exit")){
-//
-//			showMainMenu();
-//			// Get input from the user organized
-//			userInput = myScanner.nextLine()
-//					.toLowerCase()
-//					.trim();
-//
-//			//Go to utils Command to the this method functionality
-//			command.commandReader(userInput);
-//		}
-//		System.exit(0);
+		while (!userInput.equals("exit")){
+
+			showMainMenu();
+			// Get input from the user organized
+			userInput = myScanner.nextLine()
+					.toLowerCase()
+					.trim();
+
+			//Go to utils Command to the this method functionality
+			command.commandReader(userInput);
+		}
+		System.exit(0);
 		// TODO: end of the comment to run the tests
 	}
 
