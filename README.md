@@ -110,5 +110,7 @@ The "Test" classes are inside src/test/java/com.uronhack.CRMunit3/:
 
 
 ## UML DIAGRAMS
-![diagramCase](CRM case diagram.png)
-![diagramClase](CRM class diagram.png)
+
+![diagramCase](./CRM_case_diagram.png)
+
+![diagramClase](./CRM_class_diagram.png)
