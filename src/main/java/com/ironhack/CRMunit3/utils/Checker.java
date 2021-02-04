@@ -2,11 +2,12 @@ package com.ironhack.CRMunit3.utils;
 
 import com.ironhack.CRMunit3.enums.*;
 
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class Checker {
 
-    public static boolean checkName(String name) {
+    public static Boolean checkName(String name) {
         if (!name.trim().contains(" ")) {
             //make sure we have name and lastName
             throw new IllegalArgumentException((char)27 + "[31mThe name format must be Name Lastname");
@@ -42,8 +43,7 @@ public class Checker {
         //use regular expressions to check the phone format, you can check it in this page: https://unipython.com/validar-un-email-en-java/
         //...........................................................
 
-
-        Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"+
+        Pattern pattern = Pattern.compile("^[_A-Za-z0-9-+]+(\\.[_A-Za-z0-9-]+)*@"+
                                           "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
         if(pattern.matcher(email).find()){
             return true;
@@ -63,22 +63,13 @@ public class Checker {
 
     public static Product checkProduct(String product){
         //transform to lower case to fit in the switch
-        product = product.toLowerCase();
-        Product productChosen = null;
-        switch (product){
-            case "hybrid":
-                productChosen = Product.HYBRID;
-                break;
-            case "flatbed":
-                productChosen = Product.FLATBED;
-                break;
-            case "box":
-                productChosen = Product.BOX;
-                break;
-            default:
-                throw new IllegalArgumentException((char)27 + "[31mChoose a valid product");
-        }
-        return productChosen;
+        product = product.toUpperCase(Locale.ROOT);
+        return switch (product) {
+            case "HYBRID" -> Product.HYBRID;
+            case "FLATBED" -> Product.FLATBED;
+            case "BOX" -> Product.BOX;
+            default -> throw new IllegalArgumentException((char) 27 + "[31mChoose a valid product");
+        };
     }
 
 
@@ -87,6 +78,14 @@ public class Checker {
             throw new IllegalArgumentException((char)27 + "[31mQuantity must be above 0");
         }
         return true;
+    }
+
+    public static Integer checkValidId(String strId){
+        Integer id = Integer.parseInt(strId);
+        if (id <= 0) {
+            throw new IllegalArgumentException((char)27 + "[31mQuantity must be above 0");
+        }
+        return id;
     }
 
 

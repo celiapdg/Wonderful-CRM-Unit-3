@@ -2,6 +2,10 @@ package com.ironhack.CRMunit3.model;
 
 import javax.persistence.*;
 import java.util.Objects;
+
+import static com.ironhack.CRMunit3.utils.Colors.*;
+import static com.ironhack.CRMunit3.utils.Colors.ANSI_BOLD;
+
 @Entity
 public class Contact {
 
@@ -15,7 +19,7 @@ public class Contact {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    private Account accountId;
+    private Account account;
 
     public Contact() {
     }
@@ -23,12 +27,11 @@ public class Contact {
     public Contact(String name,
                    String phoneNumber,
                    String email,
-                   String companyName, Account accountId) {
+                   String companyName) {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.companyName = companyName;
-        this.accountId = accountId;
     }
 
     public String getName() {
@@ -51,17 +54,19 @@ public class Contact {
         return contactId;
     }
 
-    public Account getAccountId() {
-        return accountId;
+    public Account getAccount() {
+        return account;
     }
 
-    public void setAccountId(Account accountId) {
-        this.accountId = accountId;
+    public void setAccountId(Account account) {
+        this.account = account;
     }
 
     @Override
     public String toString() {
-        return "Contact: " +
+        return ANSI_CYAN + ANSI_BOLD +
+                "Contact: " + contactId +
+                ANSI_RESET + ANSI_BLUE +
                 "\n  name = " + name +
                 ", \n  phoneNumber = " + phoneNumber +
                 ", \n  email = " + email  +

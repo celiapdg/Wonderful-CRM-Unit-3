@@ -1,16 +1,68 @@
-//package com.ironhack.CRMunit3.utils;
-//
-//
-//import com.ironhack.CRMunit3.model.*;
-//import com.ironhack.CRMunit3.enums.*;
-//import org.junit.jupiter.api.*;
-//
-//import java.util.*;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//class CommandTest {
-//
+package com.ironhack.CRMunit3.utils;
+
+
+import com.ironhack.CRMunit3.model.*;
+import com.ironhack.CRMunit3.enums.*;
+import com.ironhack.CRMunit3.repository.*;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.*;
+import org.springframework.boot.test.context.*;
+
+import java.io.*;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+class CommandTest {
+
+
+    @Autowired
+    SalesRepRepository salesRepRepository;
+
+    @Autowired
+    LeadRepository leadRepository;
+
+    @Autowired
+    OpportunityRepository opportunityRepository;
+
+    @Autowired
+    ContactRepository contactRepository;
+
+    @Autowired
+    AccountRepository accountRepository;
+
+    Command command = new Command(salesRepRepository, leadRepository, contactRepository, opportunityRepository, accountRepository);
+
+    @BeforeEach
+    void setUp() {
+        SalesRep salesRep1 = new SalesRep("Pepa Pig");
+        SalesRep salesRep2 = new SalesRep("Pepa Pog");
+        salesRepRepository.saveAll(List.of(salesRep1,salesRep2));
+
+        Lead lead1 = new Lead("Willy Wonka", "671116666", "aijhni@najhn.com", "Chocolates Wonka", salesRep1);
+        Lead lead2 = new Lead("Señor Burns", "671166666", "aijhni@najhn.com", "Energia nucelar", salesRep2);
+
+        leadRepository.saveAll(List.of(lead1, lead2));
+
+        Contact contact1 = new Contact("Pepa Pig", "676767676", "pepa@pig.pp", "Pigs");
+        Contact contact2 = new Contact("Ana Cardo", "656565656", "ana@car.do", "Cards");
+        contactRepository.saveAll(List.of(contact1, contact2));
+
+        Opportunity opportunity1 = new Opportunity(Product.BOX, 40, contact1, salesRep1);
+        Opportunity opportunity2 = new Opportunity(Product.FLATBED, 23, contact2, salesRep2);
+
+        opportunityRepository.saveAll(List.of(opportunity1, opportunity2));
+    }
+
+    @AfterEach
+    void tearDown() {
+        opportunityRepository.deleteAll();
+        leadRepository.deleteAll();
+        salesRepRepository.deleteAll();
+    }
+
+    //
 //    Lead testValid;
 //    Lead testInvalid;
 //    HashMap<Integer, Lead> leadListTest;
@@ -166,4 +218,10 @@
 //    void lookupOpportunity_nullLead_NullPointerException() {
 //        assertThrows(NullPointerException.class, () -> Command.lookupOpportunity("345", opportunityListTest));
 //    }
-//}
+
+    @Test
+    void reportOptions_invalidImport(){
+        String[] test = {"report" ,"nkjb" ,"by" ,"salesrep"};
+        assertThrows(InvalidObjectException.class, () -> {command.reportOptions(test);});
+    }
+}

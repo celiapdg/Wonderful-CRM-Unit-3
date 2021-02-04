@@ -4,6 +4,9 @@ import com.ironhack.CRMunit3.enums.*;
 
 import javax.persistence.*;
 import java.util.Objects;
+
+import static com.ironhack.CRMunit3.utils.Colors.*;
+
 @Entity
 public class Opportunity {
 
@@ -27,27 +30,26 @@ public class Opportunity {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    private Account accountId;
+    private Account account;
 
     public Opportunity() {
     }
 
     public Opportunity(Product product, int quantity,
-                       Contact decisionMaker, SalesRep salesRep, Account accountId) {
+                       Contact decisionMaker, SalesRep salesRep) {
         this.quantity = quantity;
         this.product = product;
         this.decisionMaker = decisionMaker;
         this.salesRep = salesRep;
-        this.accountId = accountId;
         this.status = Status.OPEN;
     }
 
     public Account getAccountId() {
-        return accountId;
+        return account;
     }
 
-    public void setAccountId(Account accountId) {
-        this.accountId = accountId;
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public void setStatus(Status status) {
@@ -84,11 +86,14 @@ public class Opportunity {
 
     @Override
     public String toString() {
-        return (char)27 + "[34mOpportunity " + opportunityId+
+        return ANSI_CYAN + ANSI_BOLD +
+                "Opportunity " + opportunityId +
+                ANSI_RESET + ANSI_BLUE +
                 "\nproduct = " + product +
                 "\namount = " + quantity +
                 ", \nstatus = " + status +
-                ", \n" + decisionMaker;
+                ", \nsales rep = " + salesRep.getName() +
+                ", \n" + decisionMaker + "\n";
     }
 
     @Override
@@ -99,6 +104,6 @@ public class Opportunity {
         return quantity == that.quantity &&
                product == that.product &&
                Objects.equals(decisionMaker, that.decisionMaker) &&
-               status == that.status;
+                status == that.status;
     }
 }

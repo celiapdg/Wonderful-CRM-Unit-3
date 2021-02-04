@@ -8,7 +8,7 @@ import java.util.Scanner;
 import static com.ironhack.CRMunit3.utils.Checker.*;
 
 public class ScanInfo {
-    private static Scanner scanner = new Scanner(System.in);
+    public static Scanner scanner = new Scanner(System.in);
 
     public static String askName(){
         //Set a boolean to false to enter the loop
@@ -103,6 +103,25 @@ public class ScanInfo {
         return compName;
     }
 
+    public static Integer askSalesRep(){
+        String salesRepId ="";
+        Integer id = 0;
+        Boolean validId = false;
+        while (!validId){
+            try {
+                System.out.println((char)27 + "[39mPlease, provide a Sales Rep id");
+                salesRepId = scanner.nextLine().trim();
+                id = checkValidId(salesRepId);
+                validId = true;
+            }catch (NumberFormatException e) {
+                System.out.println((char) 27 + "[31mType a valid number format");
+            }catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return id;
+    }
+
 
     public static Product askProduct(){
         //Set Product to null to enter the loop
@@ -180,6 +199,39 @@ public class ScanInfo {
         }
         return industryChosen;
     }
+
+    public static String askNewAccount(){
+        String answer="";
+        boolean validResponse = false;
+        while(!validResponse){
+            System.out.println((char)27 + "[39m Would yo like yo create an account for this opportunity? Y/N");
+            answer= scanner.nextLine().trim().toLowerCase();
+            if(answer.equals("y")||answer.equals("n")) {
+                validResponse = true;
+            }
+        }
+        return answer;
+    }
+
+    public static Integer askAccountId(){
+        String accountId = "";
+        Integer id = 0;
+        Boolean validId = false;
+        while (!validId){
+            try {
+                System.out.println((char)27 + "[39mPlease, provide an Account id");
+                accountId = scanner.nextLine().trim();
+                id = checkValidId(accountId);
+                validId = true;
+            }catch (NumberFormatException e) {
+                System.out.println((char) 27 + "[31mType a valid number format");
+            }catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return id;
+    }
+
 
     public static int askEmployees(){
         //Initialise number of employees to be able to access it inside the loop and return it

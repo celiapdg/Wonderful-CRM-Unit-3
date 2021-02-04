@@ -1,11 +1,16 @@
 package com.ironhack.CRMunit3.model;
 
 import com.ironhack.CRMunit3.enums.Industry;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.ironhack.CRMunit3.utils.Colors.*;
 
 @Entity
 public class Account {
@@ -20,10 +25,12 @@ public class Account {
     private String city;
     private String country;
 
-    @OneToMany(mappedBy = "accountId")
+    @OneToMany(fetch=FetchType.EAGER, mappedBy = "account")
+    @Fetch(FetchMode.SUBSELECT)
     private List<Contact> contactList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "accountId")
+    @OneToMany(fetch=FetchType.EAGER, mappedBy = "account")
+    @Fetch(FetchMode.SUBSELECT)
     private List<Opportunity> opportunityList = new ArrayList<>();
     //This allows us to generate ids that don't repeat
 
@@ -39,7 +46,20 @@ public class Account {
         this.industry = industry;
         this.contactList.add(contact);
         this.opportunityList.add(opportunity);
+    }
 
+    public Account(Industry industry, int employeeCount, String city, String country,
+                   List<Contact> contacts, List<Opportunity> opportunities) {
+        this.employeeCount = employeeCount;
+        this.city = city;
+        this.country = country;
+        this.industry = industry;
+        for (Contact contact : contacts){
+            this.contactList.add(contact);
+        }
+        for (Opportunity opportunity : opportunities){
+            this.opportunityList.add(opportunity);
+        }
     }
 
     public int getEmployeeCount() {
@@ -68,15 +88,14 @@ public class Account {
 
     @Override
     public String toString() {
-        return "Account{" +
-                "industry=" + industry +
-                ", employeeCount=" + employeeCount +
-                ", city='" + city + '\'' +
-                ", country='" + country + '\'' +
-                ", contactList=" + contactList +
-                ", opportunityList=" + opportunityList +
-                ", accountId=" + accountId +
-                '}';
+        return ANSI_CYAN + ANSI_BOLD +
+                "Account " + accountId +
+                ANSI_RESET + ANSI_BLUE +
+                "\nindustry = " + industry +
+                "\nemployeeCount = " + employeeCount +
+                ", \ncity = " + city +
+                ", \ncountry = " + country +
+                ", \nopportunityList:\n" + opportunityList;
     }
 
     @Override
