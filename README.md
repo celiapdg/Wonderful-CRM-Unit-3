@@ -99,14 +99,15 @@ The following table specifies the commands you can do:
 
 ## TDD
 
-Yes, we also had to do some testing. We have to confess that this wasn't fun, but our program now is robust as a rock! (We can discuss if it was worth it later...)
+Yes, we also had to do some testing. We have to confess that this wasn't fun, but our program now is robust as a rock! (We can discuss if it was worth it later...). REMEMEBER: use the TEST database `wonderful_crm_test.sql`, since it contains the tables WITHOUT data.
 
-The "Test" classes are inside src/test/java/com.uronhack.CRMunit3/:
+The "Test" classes are inside src/test/java/com.ironhack.CRMunit3/:
 * AccountRepositoryTest
 * LeadRepositoryTest
 * OpportunityRepositoryTest
 * ScanInfoTest
 * CheckerTest
+* MathTest
 
 
 ## UML DIAGRAMS
