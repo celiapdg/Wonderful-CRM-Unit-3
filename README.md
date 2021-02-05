@@ -37,7 +37,7 @@ The principal methods have been written in three separated "utils" classes (src/
 * Colors: this class contains all colors of the console. 
 * Sound: this class contains all sounds of the console.
 
-And, of course, to execute our program, you have to run CrmUnit3Application. We have created `wonderful_crm.sql` with data to test our program (please be kind :D). If you want to run test, we have created the `wonderful_crm_test.sql` without data.
+And, of course, to execute our program, you have to run CrmUnit3Application. We have created `wonderful_crm.sql` with data to test our program (please be kind :D). If you want to run test, we have created the `wonderful_crm_test.sql` without data. They're both in the databases folder.
 
 ## Let's begin!
 
@@ -111,7 +111,7 @@ The "Test" classes are inside src/test/java/com.uronhack.CRMunit3/:
 
 ## UML DIAGRAMS
 
-![diagramCase](./CRM_case_diagram.png)
+![diagramCase](./diagrams/CRM_case_diagram.png)
 
-![diagramClase](./CRM_class_diagram.png)
+![diagramClase](./diagrams/CRM_class_diagram.png)
 

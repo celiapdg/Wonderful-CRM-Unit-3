@@ -37,7 +37,7 @@ public class CrmUnit3Application implements CommandLineRunner {
 
 		//set userInput to an empty string to enter the next loop
 		String userInput="";
-
+		
 		Command command = new Command(salesRepRepository,  leadRepository, contactRepository,opportunityRepository, accountRepository);
 
 		//This loops runs until the user chooses the exit option

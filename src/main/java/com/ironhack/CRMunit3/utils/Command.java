@@ -16,10 +16,10 @@ import static com.ironhack.CRMunit3.utils.ScanInfo.*;
 @Service
 public class Command {
 
-    public static Sound errorSound = new Sound("error.wav");
-    public static Sound bipSound = new Sound("bip.wav");
-    public static Sound yuhuSound = new Sound("yuhu.wav");
-    public static Sound exitSound = new Sound("exit.wav");
+    public static Sound errorSound = new Sound("sounds/error.wav");
+    public static Sound bipSound = new Sound("sounds/bip.wav");
+    public static Sound yuhuSound = new Sound("sounds/yuhu.wav");
+    public static Sound exitSound = new Sound("sounds/exit.wav");
 
     SalesRepRepository salesRepRepository;
     LeadRepository leadRepository;
