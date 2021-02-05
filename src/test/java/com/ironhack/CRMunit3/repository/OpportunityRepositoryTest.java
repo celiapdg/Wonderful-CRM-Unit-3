@@ -3,6 +3,7 @@ package com.ironhack.CRMunit3.repository;
 import com.ironhack.CRMunit3.enums.*;
 import com.ironhack.CRMunit3.model.*;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.math.*;
 import java.util.List;
 
+import static com.ironhack.CRMunit3.utils.Colors.ANSI_RED_BACKGROUND;
+import static com.ironhack.CRMunit3.utils.Colors.ANSI_RESET;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -26,6 +29,12 @@ class OpportunityRepositoryTest {
     ContactRepository contactRepository;
     @Autowired
     AccountRepository accountRepository;
+
+    @BeforeAll
+    public static void init(){
+        System.out.println(ANSI_RED_BACKGROUND + "Remember to comment lines 46 to 57 from " +
+                "CrmUnit3Application.java before running the tests :D" + ANSI_RESET);
+    }
 
     @BeforeEach
     void setUp() {
@@ -209,8 +218,5 @@ class OpportunityRepositoryTest {
         assertEquals(1L, result.get(0)[1]);
         assertEquals(Product.BOX, result.get(0)[0]);
     }
-
-
-
 
 }

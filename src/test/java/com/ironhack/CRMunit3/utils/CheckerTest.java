@@ -2,8 +2,11 @@ package com.ironhack.CRMunit3.utils;
 
 import com.ironhack.CRMunit3.enums.Industry;
 import com.ironhack.CRMunit3.enums.Product;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static com.ironhack.CRMunit3.utils.Colors.ANSI_RED_BACKGROUND;
+import static com.ironhack.CRMunit3.utils.Colors.ANSI_RESET;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

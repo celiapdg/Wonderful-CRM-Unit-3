@@ -1,9 +1,10 @@
-package com.ironhack.CRMunit3.repository;
+package com.ironhack.CRMunit3.utils;
 
 import com.ironhack.CRMunit3.enums.Industry;
 import com.ironhack.CRMunit3.enums.Product;
 import com.ironhack.CRMunit3.enums.Status;
 import com.ironhack.CRMunit3.model.*;
+import com.ironhack.CRMunit3.repository.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,7 @@ import static com.ironhack.CRMunit3.utils.Colors.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class AccountRepositoryTest {
+class MathTest {
 
     @Autowired
     SalesRepRepository salesRepRepository;
@@ -82,32 +83,12 @@ class AccountRepositoryTest {
     }
 
     @Test
-    void findByAccountId() {
-        Account result = accountRepository.findByAccountId(accountRepository.findAll().get(0).getAccountId());
-        assertEquals("Albacete", result.getCity());
-    }
-
-    @Test
-    void findMeanEmployeeCount() {
-        Object[] result = accountRepository.findMeanEmployeeCount();
-        assertEquals((double) 57.5, result[0]);
-    }
-
-    @Test
-    void orderEmployeeCount() {
-        List <Object[]> result = accountRepository.orderEmployeeCount();
-        assertEquals(40.0, result.get(0)[0]);
-    }
-
-    @Test
-    void findMinEmployeeCount() {
-        Object[] result = accountRepository.findMinEmployeeCount();
-        assertEquals(40, result[0]);
-    }
-
-    @Test
-    void findMaxEmployeeCount() {
-        Object[] result = accountRepository.findMaxEmployeeCount();
-        assertEquals(75, result[0]);
+    void medianTest() {
+        List<Object[]> result = opportunityRepository.findOrderOpportunitiesByAccountId();
+        assertEquals(1.5, Math.median(result));
+        result = opportunityRepository.findOrderedQuantity(Product.HYBRID.toString());
+        assertEquals( 77.0, Math.median(result));
+        result = accountRepository.orderEmployeeCount();
+        assertEquals(57.5, Math.median(result));
     }
 }

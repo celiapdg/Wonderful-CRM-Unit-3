@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
+import static com.ironhack.CRMunit3.utils.Colors.ANSI_RED_BACKGROUND;
+import static com.ironhack.CRMunit3.utils.Colors.ANSI_RESET;
 import static com.ironhack.CRMunit3.utils.ScanInfo.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

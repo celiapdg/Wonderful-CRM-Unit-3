@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.*;
 
 import java.util.*;
 
+import static com.ironhack.CRMunit3.utils.Colors.ANSI_RED_BACKGROUND;
+import static com.ironhack.CRMunit3.utils.Colors.ANSI_RESET;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -16,6 +18,12 @@ class LeadRepositoryTest {
 
     @Autowired
     LeadRepository leadRepository;
+
+    @BeforeAll
+    public static void init(){
+        System.out.println(ANSI_RED_BACKGROUND + "Remember to comment lines 46 to 57 from " +
+                "CrmUnit3Application.java before running the tests :D" + ANSI_RESET);
+    }
 
     @BeforeEach
     void setUp() {
